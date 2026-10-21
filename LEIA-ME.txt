@@ -1,1 +1,12 @@
-Versão v6 para verificar opções do formulário. Envie os dois arquivos ao GitHub, abra a nova URL e confira o cabeçalho v6. Não apague a versão anterior. Faça Backup JSON antes. A v6 utiliza a mesma planilha oficial e o armazenamento da v5.
+V9 OFICIAL V7 — ESTUDOS (LEITURA SEGURA)
+
+1. Faça backup JSON e da planilha oficial.
+2. Envie kanban_v9_oficial_v7.html e sw_v9_oficial_v7.js à raiz do repositório.
+3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_oficial_v7.html
+4. Autorize Google, vá a Estudos e clique Atualizar Estudos.
+5. Esperado: 2 áreas, 1 tópico, 1 material e 0 leituras.
+6. Desconecte a internet e confira se os dados continuam visíveis.
+
+Esta etapa integra leitura e cache offline, sem gravar Estudos na planilha. Os controles de cadastro/edição de Estudos estão temporariamente bloqueados para evitar perda de dados. Tarefas e Calendar seguem com as funções da V6.
+
+Não use Atualizar Dados Oficiais caso haja alterações pendentes em tarefas. O botão Atualizar Estudos é independente.
