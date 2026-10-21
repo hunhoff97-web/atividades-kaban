@@ -1,10 +1,17 @@
-TESTE DE LEITURA OFFLINE — não substitui o Kanban completo.
+TESTE DE EDIÇÃO OFFLINE — APENAS CÓPIA DE TESTES
 
-Envie kanban_leitura_offline.html e sw.js para a RAIZ do repositório atividades-kaban no GitHub. O sw.js substitui a versão do protótipo (preserva os arquivos anteriores e adiciona cache desta página).
+1. Faça backup da cópia de testes no Google Sheets.
+2. Envie kanban_edicao_offline.html e sw.js à raiz do repositório GitHub Pages.
+3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_edicao_offline.html
+4. Autorize o novo escopo OAuth de leitura e escrita. Não use a planilha principal.
+5. Atualize dados, crie atividade e etapas, desconecte e edite offline.
+6. Reconecte, autorize novamente se necessário e clique Sincronizar agora.
+7. Confirme os dados na cópia do Google Sheets.
 
-Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_leitura_offline.html
-Com internet, clique Autorizar Google e Atualizar dados da cópia. Depois desligue a internet, recarregue a página e confira os cartões.
-
-Não envie o banco de dados em arquivos para o repositório. A cópia é consultada via API OAuth. Não há edição nem escrita nesta etapa.
-
-Observação: qualquer pessoa pode carregar a interface pública, mas a API só permite ler a planilha com uma conta autorizada. Os dados baixados ficam no armazenamento local do navegador, que deve ser protegido.
+LIMITAÇÕES DESTA VERSÃO:
+- Interface experimental simplificada, não o Kanban V7 completo.
+- Sem sincronização automática nem detecção de conflitos entre dispositivos.
+- A Lixeira usa coluna Excluido na aba Tarefas; o Apps Script original ainda não a respeita.
+- Operações são sequenciais; uma falha de rede pode exigir repetição. IDs estáveis evitam duplicação simples.
+- Não sincroniza Calendário, Histórico nem Estudos.
+- NÃO use com dados de produção.
