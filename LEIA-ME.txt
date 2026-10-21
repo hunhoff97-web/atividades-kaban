@@ -1,12 +1,19 @@
-V9 OFICIAL V7 — ESTUDOS (LEITURA SEGURA)
+ATIVIDADES KANBAN — VERSÃO ÚNICA (OPÇÃO A)
 
-1. Faça backup JSON e da planilha oficial.
-2. Envie kanban_v9_oficial_v7.html e sw_v9_oficial_v7.js à raiz do repositório.
-3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_oficial_v7.html
-4. Autorize Google, vá a Estudos e clique Atualizar Estudos.
-5. Esperado: 2 áreas, 1 tópico, 1 material e 0 leituras.
-6. Desconecte a internet e confira se os dados continuam visíveis.
+ARQUIVOS: index.html e sw.js.
 
-Esta etapa integra leitura e cache offline, sem gravar Estudos na planilha. Os controles de cadastro/edição de Estudos estão temporariamente bloqueados para evitar perda de dados. Tarefas e Calendar seguem com as funções da V6.
+IMPORTANTE: Antes de publicar, exporte Backup JSON no aplicativo e faça uma cópia da planilha oficial.
 
-Não use Atualizar Dados Oficiais caso haja alterações pendentes em tarefas. O botão Atualizar Estudos é independente.
+1. Faça upload de index.html e sw.js na RAIZ do repositório atividades-kaban.
+2. GitHub Settings > Pages: confira publicação da branch principal / (root).
+3. Abra https://hunhoff97-web.github.io/atividades-kaban/
+4. Caso a raiz ainda use uma versão antiga, atualize a página com Ctrl+Shift+R e verifique o Service Worker no navegador.
+5. Autorize Google com o botão. O token NÃO é salvo permanentemente; o Google pode pedir interação após expiração.
+6. Carregue dados oficiais somente depois de fazer backup; confirme habilitação de edição.
+7. A opção 'Sincronizar pendências após autorizar' é opt-in; somente funciona após habilitação explícita da edição neste dispositivo.
+8. Confirme que Estudos e Calendar continuam funcionando antes de remover arquivos antigos do repositório.
+
+NOTAS: Mantida a mesma chave de cache IndexedDB da versão oficial anterior para conservar dados locais.
+Não altere o ID da planilha oficial.
+A sincronização de Estudos continua SOMENTE LEITURA, como na V7.
+O modo de publicação OAuth deve ser verificado no Google Cloud.
