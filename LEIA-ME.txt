@@ -1,10 +1,10 @@
-VERSAO V9 OFFLINE v3 — CORRECAO DA BARRA E LIXEIRA
+V9 PLANILHA OFICIAL — PRIMEIRO ACESSO SEGURO
 
-1. Faça Backup JSON na versão que já funciona.
-2. Envie os dois arquivos HTML e JS deste ZIP para a raiz do repositório GitHub.
-3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_edicao_offline_v3.html
-4. Confirme que aparece V9 • TESTE OFFLINE v3, que a barra fica imediatamente abaixo do cabeçalho e que a Lixeira mostra Restaurar e Excluir definitivamente.
-5. Teste exclusão permanente apenas com tarefa fictícia, na planilha de testes.
-6. NÃO apague o HTML antigo nem o backup; NÃO use a planilha principal.
+1. Faça cópia/backup da planilha oficial e backup JSON da versão de testes.
+2. Envie kanban_v9_oficial_v1.html e sw_v9_oficial_v1.js à raiz do repositório GitHub Pages.
+3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_oficial_v1.html com internet.
+4. Autorize Google, clique Carregar dados oficiais, confirme contagem e faça a confirmação de habilitar edição.
+5. Confira a lista, crie UMA atividade fictícia e sincronize. Confira no Sheets oficial e exclua somente depois.
+6. Cada dispositivo precisa autorizar e carregar seus próprios dados oficiais. Não use a versão de testes para gravar na planilha oficial.
 
-ATENÇÃO: excluir definitivamente é irreversível após sincronizar e remove dados da atividade e das etapas na cópia de testes.
+IMPORTANTE: a primeira leitura não grava na planilha. Os dados locais oficiais usam chave separada. A interface ainda não suporta todas as funções online da V9. Sincronização manual, sem resolução de conflitos simultâneos. Não edite a mesma atividade em dois dispositivos antes de sincronizar.
