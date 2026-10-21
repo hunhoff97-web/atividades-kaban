@@ -1,0 +1,14 @@
+ATIVIDADES KANBAN — PROTÓTIPO OFFLINE
+
+1. Hospede TODOS os arquivos desta pasta no mesmo diretório de um site HTTPS (por exemplo, GitHub Pages).
+2. Abra o endereço HTTPS com internet uma primeira vez, aguarde o carregamento e instale/adicone à tela inicial.
+3. Desligue a internet e abra novamente pelo ícone; a interface deve ser carregada pelo cache.
+4. Cadastre atividades e etapas: são armazenadas em IndexedDB neste dispositivo.
+5. Use Exportar backup JSON regularmente.
+
+LIMITAÇÕES DESTA ETAPA:
+- Não substitui a interface completa do Kanban hospedada em Google Apps Script.
+- Não sincroniza com Google Sheets nem com Calendar; isso exige integração adicional e definição de autenticação.
+- Não permite editar atividades antigas ou criar novos cadastros de fazendas/projetos.
+- Sem hospedagem HTTPS e primeira visita online, o modo offline não funciona.
+- Dados locais podem ser apagados pelo navegador ou sistema. Faça backup.
