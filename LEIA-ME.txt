@@ -1,7 +1,12 @@
-CORREÇÃO DA BARRA DE SINCRONIZAÇÃO
+ATIVIDADES KANBAN V9 — CORREÇÃO DE CAMPOS E LIXEIRA
 
-Substitua somente kanban_v9_edicao_offline_teste.html no GitHub e confirme o commit.
-O arquivo sw_v9_edicao_v2.js está incluído para referência e não precisa ser substituído.
-A barra fica imediatamente abaixo do cabeçalho Atividades Kanban e não acompanha a rolagem.
-Após publicar, recarregue a página com Ctrl+F5.
-Não altera o banco, as filas locais ou o mecanismo de sincronização.
+1. Antes de substituir arquivos, clique em Backup JSON na versão atual.
+2. No repositório atividades-kaban, substitua kanban_v9_edicao_offline_teste.html.
+3. Adicione sw_v9_edicao_v2.js na mesma pasta (raiz).
+4. Commit. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_edicao_offline_teste.html
+5. Recarregue com internet uma vez, preferencialmente Ctrl+F5.
+6. Teste a edição e o botão Enviar à lixeira, depois o menu Lixeira > Restaurar.
+7. Autorize Google e sincronize. Confira a coluna Excluido na aba Tarefas da CÓPIA de testes.
+
+O aplicativo compartilha os mesmos dados IndexedDB da versão anterior. Não apague dados do navegador.
+Somente a planilha de testes está configurada para escrita. O Calendar e Estudos continuam sem sincronização offline.
