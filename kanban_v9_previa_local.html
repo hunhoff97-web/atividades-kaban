@@ -1,0 +1,504 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PRÉVIA LOCAL — Atividades Kanban</title><style>
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f5f6f8;color:#18212b}header{height:64px;background:#20364a;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 22px}.brand{font-weight:750}.nav{display:flex;gap:5px}.nav button{background:transparent;color:#dbe4ec}.nav button.active{background:#fff;color:#20364a}button{border:0;border-radius:9px;padding:9px 12px;font-weight:650;cursor:pointer}.primary{background:#20364a;color:#fff}.light{background:#eef2f6;color:#20364a}main{padding:18px;max-width:1800px;margin:auto}.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}.metric,.card,.day{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:13px}.metric span{font-size:12px;color:#6b7280;text-transform:uppercase}.metric b{font-size:24px;display:block;margin-top:4px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}input,select,textarea{
+border:1px solid #d0d5dd;border-radius:9px;padding:9px;
+background:#fff !important;color:#18212b !important;width:100%;
+-webkit-text-fill-color:#18212b;opacity:1
+}
+select option{background:#fff !important;color:#18212b !important}
+input::placeholder,textarea::placeholder{color:#667085 !important;-webkit-text-fill-color:#667085}
+input[type="date"]{color-scheme:light;background:#fff !important;color:#18212b !important}
+input[type="date"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field{
+color:#18212b !important;-webkit-text-fill-color:#18212b !important
+}
+.drawer label{display:block;color:#18212b !important;font-weight:500;margin-top:7px;margin-bottom:3px}
+.drawer input,.drawer select,.drawer textarea{font-size:15px;line-height:1.35}#search{min-width:260px;flex:1;width:auto}.toolbar select{width:auto}.board{display:grid;grid-template-columns:repeat(6,minmax(240px,1fr));gap:10px;overflow-x:auto}.col{background:#eceff2;border-radius:13px;padding:10px;min-height:520px}.head{display:flex;justify-content:space-between;padding:5px 3px 11px;font-size:13px;font-weight:800;text-transform:uppercase}.count{background:#dfe3e8;border-radius:20px;padding:3px 8px}.card{margin-bottom:9px;cursor:pointer}.task-head{display:flex;align-items:flex-start;gap:9px}.task-head .title{flex:1}.task-check{width:19px!important;height:19px;flex:none;margin:1px 0 0;cursor:pointer;accent-color:#24734a}.task-done .title{text-decoration:line-through;color:#667085}.title{font-weight:750;margin-bottom:8px}.meta{font-size:12px;color:#6b7280;margin-bottom:8px}.badges{display:flex;gap:5px;flex-wrap:wrap}.badge{font-size:11px;border-radius:20px;padding:4px 7px;background:#eef2f6}.critical{background:#fee4e2;color:#912018}.urgent{background:#fff0d6;color:#8a4b00}.over{color:#b42318;font-weight:750}.drawer{position:fixed;right:-580px;top:0;width:min(580px,100vw);height:100vh;background:#fff;z-index:20;box-shadow:-12px 0 30px #0003;transition:.2s;padding:22px;overflow:auto}.drawer.open{right:0}.overlay{display:none;position:fixed;inset:0;background:#0f172a52;z-index:15}.overlay.open{display:block}.section{border-top:1px solid #e5e7eb;padding-top:14px;margin-top:18px}.section h3{font-size:13px;text-transform:uppercase;color:#6b7280}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions{display:flex;gap:8px;margin-top:18px}.next{background:#f7f9fb;border-left:4px solid #20364a;padding:12px}.sub{padding:10px 0;border-bottom:1px solid #eee}.subtop{display:flex;justify-content:space-between;gap:8px}.sub small{color:#6b7280}.agenda{display:grid;grid-template-columns:repeat(7,minmax(170px,1fr));gap:10px;overflow-x:auto}.day{min-height:350px}.day h3{margin:0 0 4px}.day .date{font-size:12px;color:#6b7280;margin-bottom:12px}.event{background:#eef2f6;border-left:4px solid #20364a;border-radius:7px;padding:9px;margin-bottom:8px;font-size:13px}.hidden{display:none}.sync{font-size:12px;color:#18794e}.note{font-size:12px;color:#6b7280;margin-bottom:12px}@media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr)}.board{grid-template-columns:repeat(6,270px)}.agenda{grid-template-columns:repeat(7,230px)}.row{grid-template-columns:1fr}.nav{overflow:auto}}
+
+.year-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.year-heading h2{margin-bottom:3px}.year-controls{display:flex;align-items:center;gap:14px}.year-metrics{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin:15px 0}.year-stat,.heatmap-card,.year-detail{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:17px}.year-stat span{display:block;font-size:12px;color:#667085}.year-stat b{font-size:27px;display:block;margin-top:7px;color:#20364a}.heatmap-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:14px}.heatmap-scroll{overflow-x:auto;padding:4px 0 10px}#yearHeatmap{min-width:770px}.month-labels{display:grid;grid-template-columns:repeat(53,1fr);height:21px;font-size:11px;color:#667085}.heatmap-layout{display:flex;gap:9px}.weekday-labels{width:26px;display:grid;grid-template-rows:repeat(7,12px);gap:3px;font-size:10px;color:#667085;flex-shrink:0}.heatmap-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,12px);grid-auto-columns:12px;gap:3px}.heat{width:12px;height:12px;border-radius:3px;display:inline-block}.heat.day{padding:0;border:0;cursor:pointer}.heat.day:hover{outline:2px solid #20364a;outline-offset:1px}.level0{background:#edf0f2}.level1{background:#b9e8c9}.level2{background:#78ce97}.level3{background:#35a869}.level4{background:#167a45}.heat.outside{background:#e3e7e0;pointer-events:none}.heatmap-legend{display:flex;align-items:center;justify-content:flex-end;gap:5px;font-size:11px;color:#667085;margin-top:12px}.heatmap-legend span{margin:0 5px}.year-detail{margin-top:12px;font-size:13px}.year-detail ul{padding-left:19px}.year-detail li{margin:7px 0}@media(max-width:850px){.year-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Paleta personalizada: #072F38, #334E3B, #65806D, #C8CBC0, #BD7423 */
+:root{--petroleo:#072f38;--floresta:#334e3b;--salvia:#65806d;--neutro:#c8cbc0;--ocre:#bd7423;--fundo:#f2f3ef;--texto:#173137;--borda:#d4d9d1}
+body{background:var(--fundo);color:var(--texto)}
+header{background:var(--petroleo);color:#fff;border-bottom:3px solid var(--floresta)}
+.nav button{color:#dce8df}.nav button:hover{background:#ffffff1b}.nav button.active{background:var(--neutro);color:var(--petroleo)}
+header>button{background:var(--ocre);color:#fff}header>button:hover{background:#a36218}
+.primary{background:var(--floresta);color:white}.primary:hover{background:var(--petroleo)}
+.light{background:#e2e7df;color:var(--petroleo)}.light:hover{background:var(--neutro)}
+.metric,.card,.day,.year-stat,.heatmap-card,.year-detail{background:#fff;border-color:var(--borda)}
+.metric b,.year-stat b{color:var(--petroleo)}.metric span,.year-stat span,.meta,.note,.day .date,.sub small,.section h3{color:#53665c}
+.col{background:#e2e7df}.head{color:var(--petroleo)}.count{background:var(--neutro);color:var(--petroleo)}
+.card{box-shadow:0 1px 3px #072f3810}.card:hover{border-color:var(--salvia);box-shadow:0 2px 8px #072f3818}
+.badge{background:#e7ebe4;color:var(--floresta)}.badge.critical{background:#f5e4d0;color:#86501b}.badge.urgent{background:#f6e7d4;color:#96560c}
+.over{color:#a04c15}.task-check{accent-color:var(--floresta)}.task-done .title{color:#65806d}
+.drawer{background:#f9faf7}.drawer label{color:var(--petroleo)!important}
+input,select,textarea{border-color:#b7c3b8;background:#fff!important;color:var(--texto)!important;-webkit-text-fill-color:var(--texto)}
+select option{color:var(--texto)!important}.next{background:#eaf0e9;border-left-color:var(--floresta)}
+.event{background:#eaf0e9;border-left-color:var(--salvia)}.section{border-color:var(--borda)}
+.heat.day:hover{outline-color:var(--ocre)}.level0{background:#e3e7e0}.level1{background:#c8cbc0}.level2{background:#9eb8a1}.level3{background:#65806d}.level4{background:#334e3b}
+.heatmap-legend,.month-labels,.weekday-labels{color:#53665c}
+:focus-visible{outline:2px solid var(--ocre);outline-offset:2px}
+
+/* V3.4 — calendário anual em células quadradas, sem rolagem interna */
+.heatmap-scroll{overflow:visible;padding:0;max-width:100%}
+#yearHeatmap{min-width:0;width:100%}
+.heatmap-layout{display:grid;grid-template-columns:29px minmax(0,1fr);gap:8px;align-items:stretch}
+.month-labels{display:grid;grid-template-columns:repeat(var(--weeks,53),minmax(0,1fr));gap:2px;margin-left:37px;height:22px;overflow:visible}
+.month-labels span{font-size:10px;white-space:nowrap;overflow:visible}
+.heatmap-grid{width:100%;min-width:0;display:grid;grid-auto-flow:column;grid-template-columns:repeat(var(--weeks,53),minmax(0,1fr));grid-template-rows:repeat(7,minmax(0,1fr));grid-auto-columns:unset;gap:3px;align-items:stretch}
+.heatmap-grid .heat.day,.heatmap-grid .heat.outside{display:block;box-sizing:border-box;width:100%;height:auto;min-height:0;aspect-ratio:1/1;padding:0;margin:0;border:0;border-radius:3px;box-shadow:none}
+.heatmap-grid .heat.day{cursor:pointer}
+.heatmap-grid .level0{background:#e3e7e0}
+.heatmap-grid .level1{background:#334e3b}
+.heatmap-grid .heat.outside{background:#e3e7e0}
+.weekday-labels{width:29px;display:grid;grid-template-rows:repeat(7,minmax(0,1fr));gap:3px;align-items:center;font-size:10px}
+.heatmap-legend .heat{width:13px;height:13px;min-height:0;flex:none;border-radius:3px}
+@media(max-width:700px){.heatmap-card{padding:10px}.heatmap-grid{gap:1px}.weekday-labels{gap:1px;font-size:9px}.heatmap-layout{grid-template-columns:24px minmax(0,1fr);gap:4px}.month-labels{margin-left:28px;gap:1px}.month-labels span{font-size:8px}.heatmap-grid .heat.day,.heatmap-grid .heat.outside{border-radius:1px}}
+
+/* V3.7 */
+.card .title{color:#bd7423}.card.task-done .title{color:#65806d;text-decoration:line-through}
+.heatmap-legend .level0{background:#e3e7e0}.heatmap-legend .level1{background:#334e3b}
+.quick{background:#fff;border:1px solid var(--borda);padding:16px;border-radius:12px;margin-bottom:16px}
+.quick textarea{min-height:75px}.quick-actions{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:9px}
+.quick-preview{background:#edf2eb;padding:12px;border-radius:9px;margin-top:10px}
+.quick-preview .row{margin-bottom:8px}.quick-preview label{display:block;font-size:12px;margin:5px 0}
+.today-group{margin:12px 0 24px}.today-group h3{color:var(--petroleo)}.today-group .card{max-width:850px}
+.sub-check{width:18px!important;height:18px;accent-color:#334e3b;flex:none}.sub-done{text-decoration:line-through;color:#65806d}
+.sub-progress{font-size:12px;color:#53665c;margin:7px 0}.progress-track{height:6px;background:#e3e7e0;border-radius:5px;overflow:hidden}.progress-fill{height:100%;background:#334e3b}
+#quickFeedback{font-size:12px;color:#53665c}.year-detail button{padding:4px 8px;margin-left:6px}
+@media(max-width:800px){header{height:auto;min-height:64px;flex-wrap:wrap;gap:8px;padding:10px}.nav{order:3;width:100%}.year-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* V4: navegação, cartões e responsividade */
+.group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}.group-grid .card{margin:0}
+header{position:sticky;top:0;z-index:15;display:flex;justify-content:space-between;align-items:center;padding:10px 24px;background:#072f38;color:white;min-height:62px;height:auto}
+.sidebar{position:fixed;top:62px;left:0;bottom:0;width:210px;background:#f4f6f2;border-right:1px solid #dce2d8;padding:18px 10px;display:flex;flex-direction:column;gap:5px;overflow:auto;z-index:10}
+.side-title{font-size:12px;font-weight:700;color:#65806d;text-transform:uppercase;padding:7px 10px}
+.sidebar button{background:transparent;border:0;color:#072f38;text-align:left;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+.sidebar button:hover,.sidebar button.active{background:#dfe9df;color:#072f38}
+main{margin-left:210px;max-width:none}
+.star{border:0;background:transparent;color:#89978a;font-size:23px;cursor:pointer;padding:0 4px;line-height:1}.star.chosen{color:#bd7423}
+.task-head .title{flex:1;min-width:0}.card{cursor:pointer}
+.day-card{margin-bottom:10px}.day-card .card{margin-bottom:0}.day-actions{display:flex;gap:5px;padding:7px;background:#f5f7f3;border:1px solid #dce2d8;border-top:0;border-radius:0 0 9px 9px;flex-wrap:wrap}
+.suggest-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px;border-bottom:1px solid #e3e7e0}
+.history-item{padding:8px 0;border-bottom:1px solid #e3e7e0}.history-item small{color:#65806d}.history-item p{margin:3px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+#importantList,#modelList,#archiveList{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+#importantList .card,#modelList .card,#archiveList .card{margin:0}
+@media(max-width:900px){.sidebar{position:static;width:auto;flex-direction:row;overflow-x:auto;white-space:nowrap;padding:7px;gap:4px}.sidebar .side-title{display:none}.sidebar button{flex-shrink:0;padding:9px}main{margin-left:0}header{position:sticky;top:0;padding:10px}.board{overflow-x:auto}.drawer{width:min(100%,480px)}.toolbar{flex-wrap:wrap}}
+@media(max-width:520px){.metrics,.year-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.row{flex-direction:column}.row>div{width:100%}.card{padding:12px}.sidebar button{font-size:12px}.brand{font-size:16px}}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap}.new-activity{background:#BD7423;color:white}.new-activity:hover{background:#9f5f18}.plan-agenda{background:#334E3B;color:white;border:1px solid #789080}.plan-agenda:hover{background:#45684d}.compact-view .card{padding:8px;margin-bottom:5px}.compact-view .card .meta,.compact-view .card .badges,.compact-view .card .sub-progress,.compact-view .card .progress-track{display:none}.compact-view .card .title{margin-bottom:0}.view-switch{display:flex;align-items:center;gap:8px;font-size:12px}.view-switch select{width:auto}@media(max-width:620px){.header-actions{width:100%}.header-actions button{flex:1}.sidebar{top:auto}}
+
+/* V6: board task statuses grouped into 4 columns and Study summary fifth */
+.board{display:grid;grid-template-columns:repeat(5,minmax(205px,1fr));gap:10px;overflow-x:auto;align-items:start;padding-bottom:12px}
+.col{min-height:380px;min-width:0;transition:background .2s}.col-studies{background:#e5ece5}.col.is-expanded{background:#dfe9df}.col.is-collapsed{padding:7px 3px;min-height:360px}
+.col .head{align-items:flex-start;gap:4px;flex-wrap:wrap}.col-label{flex:1;min-width:0}.col-label strong{display:block;letter-spacing:.02em}.col-label small{font-size:11px;text-transform:none;color:#64756b;display:block;font-weight:500;margin-top:3px;line-height:1.3}
+.col-controls{display:flex;gap:3px;margin-left:auto}.col-controls button{padding:1px 5px;background:transparent;color:#506b55;border:1px solid #cdd6cd;border-radius:5px;line-height:20px}
+.col.is-collapsed .head{flex-direction:column;align-items:center}.col.is-collapsed .col-label{writing-mode:vertical-rl;transform:rotate(180deg);max-height:250px}.col.is-collapsed .col-label small{display:none}.col.is-collapsed .col-body{display:none}.col.is-collapsed .col-controls{flex-direction:column;margin:0}.col.is-collapsed .count{padding:2px 5px}
+.col .card{padding:10px}.card .title{font-size:13px}.card-quick{display:flex;gap:5px;border-top:1px solid #e4e9e2;margin-top:9px;padding-top:7px;flex-wrap:wrap}
+.card-quick button{background:#eef2eb;color:#334e3b;border-radius:6px;padding:5px 7px;font-size:11px}.card-quick button:hover{background:#d4e0d2}.task-done .card-quick{display:none}
+.study-summary-card{background:#fff;border:1px solid #d4d9d1;border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer}.study-summary-card:hover{border-color:#65806d}.study-summary-card .topic-title{font-weight:700;color:#bd7423;font-size:13px;line-height:1.35;overflow-wrap:anywhere}
+.study-summary-card .topic-area,.study-summary-card .next-step{font-size:11px;color:#52645a;margin-top:5px;overflow-wrap:anywhere}.study-summary-card .next-step{color:#334e3b}
+.study-meter{height:6px;border-radius:12px;background:#e3e7e0;overflow:hidden;margin-top:7px}.study-meter>div{height:100%;background:#334e3b}
+.study-summary-foot{display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:11px;color:#5b7161;margin-top:5px}
+.study-more{width:100%;font-size:12px;background:#edf2ea;color:#334e3b}
+.study-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.study-top h2{margin:0 0 6px}.study-buttons{display:flex;gap:8px}
+.study-stats{display:grid;grid-template-columns:repeat(3,minmax(120px,1fr));gap:10px;margin:14px 0}.study-stat{border:1px solid #d4d9d1;background:#fff;border-radius:12px;padding:14px}.study-stat strong{display:block;font-size:23px;color:#072f38}.study-stat span{font-size:11px;color:#52645a}
+.study-section{margin:20px 0}.study-section>h3{color:#072f38;font-size:17px;margin:0 0 10px}.study-topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.study-topic-card{background:#fff;border:1px solid #d4d9d1;border-radius:12px;padding:13px;min-width:0}.study-topic-card h4{margin:0;color:#bd7423;font-size:15px}.study-topic-card p{font-size:12px;white-space:pre-line;color:#53665c;margin:6px 0}.study-topic-meta{font-size:12px;color:#334e3b}.study-topic-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.study-topic-actions button{padding:6px 8px;background:#e7ebe4;color:#334e3b;font-size:11px}
+.study-material{border-top:1px solid #e1e7df;padding:8px 0;display:flex;gap:6px;align-items:center;font-size:12px}.study-material>a{color:#174850;overflow-wrap:anywhere;flex:1}.study-material span{flex:1;overflow-wrap:anywhere}.study-material select{flex:none;width:auto;max-width:120px;font-size:11px;padding:5px}
+.study-overlay{display:none;position:fixed;inset:0;background:#0f172a70;z-index:29}.study-overlay.open{display:block}.study-drawer{position:fixed;right:-570px;top:0;bottom:0;width:min(570px,100%);background:#f9faf7;z-index:30;transition:right .2s;overflow:auto;padding:20px;box-shadow:-7px 0 25px #0003}.study-drawer.open{right:0}.study-drawer-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #d4d9d1;padding-bottom:12px;margin-bottom:14px}
+.study-drawer label{display:block;font-size:12px;font-weight:650;color:#334e3b;margin:10px 0 4px}.study-drawer .actions{position:sticky;bottom:0;background:#f9faf7;border-top:1px solid #d4d9d1;padding:10px 0;margin-top:20px;z-index:2}.study-drawer .actions button{flex:1}
+.clickable-event{display:block;width:100%;text-align:left;cursor:pointer;color:#203d31}.clickable-event:hover{background:#d4e2d6}
+.compact-view .card .badges{display:flex}.compact-view .card .badges .badge:not(.urgent):not(.over){display:none}.compact-view .card-quick{display:flex}
+@media(max-width:1100px){.board{grid-template-columns:repeat(5,minmax(235px,1fr))}}
+@media(max-width:700px){.study-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.study-topics{grid-template-columns:1fr}.study-top{flex-direction:column}.study-drawer{padding:14px}.board{grid-template-columns:repeat(5,minmax(250px,1fr))}}
+
+/* V7: planning, reading journal, and Drive link selector */
+.weekly-review-grid{display:grid;grid-template-columns:repeat(4,minmax(125px,1fr));gap:10px;margin:15px 0}
+.weekly-review-stat{background:#fff;border:1px solid #d4d9d1;border-radius:12px;padding:14px}
+.weekly-review-stat b{font-size:27px;color:#072f38;display:block}
+.weekly-review-stat span{font-size:12px;color:#53665c}
+.weekly-review-sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.weekly-review-section{background:#fff;border:1px solid #d4d9d1;padding:14px;border-radius:12px;min-width:0}
+.weekly-review-section h3{margin:0 0 8px;font-size:15px;color:#334e3b}
+.review-row{display:flex;gap:7px;align-items:center;justify-content:space-between;border-top:1px solid #e3e7e0;padding:8px 0;font-size:12px}
+.review-row>span{flex:1;overflow-wrap:anywhere}.review-row button{font-size:11px;white-space:nowrap;padding:6px}
+.drive-open-btn{margin-top:8px;border:1px solid #bacaba;width:100%;text-align:center}
+.drive-picker-backdrop{display:none;position:fixed;inset:0;background:#0f172a9e;z-index:49}
+.drive-picker-modal{display:none;position:fixed;z-index:50;top:50%;left:50%;transform:translate(-50%,-50%);width:min(660px,calc(100vw - 24px));max-height:88vh;background:#f9faf7;border-radius:16px;box-shadow:0 15px 60px #0004;padding:20px;overflow:auto}
+.drive-picker-backdrop.open,.drive-picker-modal.open{display:block}
+.drive-picker-header{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:6px}
+.drive-search{display:flex;gap:6px}.drive-search input{flex:1;min-width:0}
+.drive-picker-toolbar{display:flex;align-items:center;gap:7px;margin:12px 0 6px;flex-wrap:wrap}.drive-picker-toolbar span{font-size:12px;color:#52645a}
+.drive-results{max-height:360px;overflow:auto;border:1px solid #d4d9d1;border-radius:10px;background:#fff;margin-bottom:14px}
+.drive-item{width:100%;display:flex;align-items:center;gap:9px;border-bottom:1px solid #edf1ed;background:#fff;color:#173137;text-align:left;border-radius:0;padding:12px;overflow-wrap:anywhere}
+.drive-item:hover{background:#edf2ea}.drive-item .drive-kind{flex:none;color:#65806d}.drive-item .drive-label{flex:1;min-width:0}
+.reading-history{margin-top:10px}.reading-entry{border-left:3px solid #65806d;background:#edf2ea;margin:8px 0;padding:9px;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:720px){.weekly-review-grid,.weekly-review-sections{grid-template-columns:repeat(2,minmax(0,1fr))}.drive-picker-modal{padding:12px}}
+@media(max-width:500px){.weekly-review-sections{grid-template-columns:1fr}.review-row{flex-wrap:wrap}}
+</style></head><body>
+<header><div class="brand">Atividades Kanban</div><div class="header-actions"><button class="new-activity" onclick="newTask()">＋ Nova atividade</button><button class="plan-agenda" onclick="newAppointment()">▣ Planejar Agenda</button></div></header><aside class="sidebar"><div class="side-title">Atividades</div><button id="nKanban" class="active" onclick="showView('kanban')">▥ Kanban</button><button id="nHoje" onclick="showView('hoje')">☀ Meu Dia</button><button id="nImportantes" onclick="showView('importantes')">★ Importantes</button><button id="nAgenda" onclick="showView('agenda')">▦ Minha Semana</button><button id="nRevisao" onclick="showView('revisao')">☑ Revisão semanal</button><button id="nCompromissos" onclick="showView('compromissos')">▣ Compromissos</button><button id="nProjetos" onclick="showView('projetos')">▣ Projetos e fazendas</button><button id="nEstudos" onclick="showView('estudos')">▤ Estudos</button><button id="nModelos" onclick="showView('modelos')">▤ Modelos</button><button id="nArquivadas" onclick="showView('arquivadas')">▧ Arquivadas</button><button id="nResumo" onclick="showView('resumo')">▥ Resumo anual</button><button id="nConfigV5" onclick="showView('configV5')">⚙ Configurações</button></aside><main><div id="kanbanView"><div class="metrics"><div class="metric"><span>Atrasadas</span><b id="mOver">1</b></div><div class="metric"><span>Planejadas hoje</span><b id="mToday">0</b></div><div class="metric"><span>Próximos 7 dias</span><b>0</b></div><div class="metric"><span>Críticas</span><b>3</b></div><div class="metric"><span>Aguardando</span><b>0</b></div></div><div class="toolbar"><input id="search" placeholder="🔎 Buscar..." oninput="render()"><select id="priority" onchange="render()"><option value="">Prioridade</option><option>Crítico</option><option>Médio</option><option>Longo prazo</option></select><select id="categoryFilter" onchange="render()"><option value="">Categoria</option><option>Trabalho</option><option>Pessoal</option></select><select id="farmFilter" onchange="render()"><option value="">Todas as fazendas</option></select><select id="seasonFilter" onchange="render()"><option value="">Todas as safras</option></select><select id="urgency" onchange="render()"><option value="">Urgência</option><option>Urgente</option><option>Não urgente</option><option>Não definida</option></select></div><div class="toolbar"><label class="view-switch">Ordenar <select id="sortMode" onchange="setSortMode(this.value)"><option value="priority">Urgência e prioridade</option><option value="due">Prazo mais próximo</option><option value="recent">Atualizadas recentemente</option></select></label><label class="view-switch">Exibição <select id="viewDensity" onchange="setDensity(this.value)"><option value="detail">Detalhada</option><option value="compact">Compacta</option></select></label></div><div class="note">V7 conectada ao Google Sheets. Alterações salvas são persistidas no banco.</div><div class="board" id="board"></div></div>
+<div id="estudosView" class="hidden">
+  <div class="study-top"><div><h2>Meus Estudos</h2><p class="note">Áreas de conhecimento → tópicos → materiais. Os PDFs permanecem no Google Drive.</p></div><div class="study-buttons"><button class="light" onclick="openStudyArea()">＋ Área</button><button class="primary" onclick="openStudyTopic()">＋ Tópico</button></div></div>
+  <div id="studyAlert" class="note"></div><div id="studyStats" class="study-stats"></div>
+  <div class="toolbar"><label class="view-switch">Área <select id="studyAreaFilter" onchange="renderStudies()"><option value="">Todas as áreas</option></select></label><input id="studySearch" placeholder="Buscar tópicos, livros, artigos, PDFs..." oninput="renderStudies()"></div>
+  <div id="studyLibrary"></div>
+</div>
+<div id="importantesView" class="hidden"><h2>★ Importantes</h2><div id="importantList"></div></div><div id="modelosView" class="hidden"><h2>Modelos de atividades</h2><div id="modelList"></div></div><div id="arquivadasView" class="hidden"><h2>Arquivadas</h2><div id="archiveList"></div></div><div id="agendaView" class="hidden"><div class="year-heading"><h2>Minha Semana</h2><div class="year-controls"><button class="light" onclick="shiftWeek(-1)">‹ Anterior</button><strong id="weekRange"></strong><button class="light" onclick="shiftWeek(1)">Próxima ›</button><button class="light" onclick="shiftWeek(0)">Esta semana</button></div></div><p class="note">Datas planejadas e compromissos. A data de planejamento não altera o prazo.</p><div class="agenda" id="agenda"></div></div>
+<div id="revisaoView" class="hidden"><div class="study-top"><div><h2>Revisão semanal</h2><p class="note">Conferência da última semana e preparação da próxima. Nada é reagendado automaticamente.</p></div><button class="light" onclick="renderWeeklyReview()">↻ Atualizar revisão</button></div><div id="weeklyReviewContent"></div></div>
+<div id="compromissosView" class="hidden"><h2>Compromissos e visitas</h2><div id="appointmentsList"></div></div><div id="hojeView" class="hidden"><h2>Meu Dia</h2><div id="daySuggestions"></div><div id="todayList"></div></div>
+<div id="projetosView" class="hidden"><h2>Projetos</h2><div class="card"><b>Santa Terezinha</b><p>2 atividades</p></div><div class="card"><b>Organização do conhecimento</b><p>1 atividade</p></div><div class="card"><b>Base técnica</b><p>1 atividade</p></div></div>
+<div id="configV5View" class="hidden"><h2>Configurações</h2><div class="card"><h3>Resumo diário por e-mail (opcional)</h3><p class="note">Após configurar, execute installDailyReminder uma vez no Apps Script. O acionador é independente da abertura do aplicativo.</p><label>E-mail de destino</label><input id="reminderEmail" type="email" placeholder="seu@email.com"><p><label><input type="checkbox" id="reminderEnabled" style="width:auto"> Ativar resumo diário</label></p><button class="light" onclick="saveReminderConfig()">Salvar configurações</button></div></div><div id="resumoView" class="hidden"><div class="year-heading"><div><h2>Resumo anual</h2><p class="note">Histórico das atividades concluídas por dia. Passe o cursor sobre os quadrados para ver as datas.</p></div><div class="year-controls"><button class="light" onclick="changeYear(-1)" aria-label="Ano anterior">‹</button><strong id="selectedYear"></strong><button class="light" onclick="changeYear(1)" aria-label="Próximo ano">›</button></div></div><div class="year-metrics" id="yearMetrics"></div><div class="heatmap-card"><div class="heatmap-head"><strong>Conclusões por dia</strong><span class="note" id="yearTotal"></span></div><div class="heatmap-scroll"><div id="yearHeatmap"></div></div><div class="heatmap-legend"><i class="heat level0"></i><span>Sem conclusão</span><i class="heat level1"></i><span>Com conclusão</span></div></div><div class="year-detail" id="yearDetail">Selecione um dia verde para visualizar as atividades concluídas.</div></div></main>
+<div class="overlay" id="overlay" onclick="closeD()"></div><aside class="drawer" id="drawer"><button class="light" style="float:right" onclick="closeD()">✕</button><div id="detail"></div></aside>
+<div class="study-overlay" id="studyOverlay" onclick="closeStudyDrawer()"></div><aside class="study-drawer" id="studyDrawer" aria-label="Editor de estudos"><div class="study-drawer-head"><strong id="studyDrawerTitle">Estudo</strong><button class="light" onclick="closeStudyDrawer()">✕</button></div><div id="studyForm"></div></aside>
+<div class="drive-picker-backdrop" id="drivePickerBackdrop" role="presentation" onclick="closeDrivePicker()"></div>
+<section class="drive-picker-modal" id="drivePickerModal" role="dialog" aria-modal="true" aria-label="Escolher arquivo no Google Drive">
+  <div class="drive-picker-header"><strong>Escolher arquivo no Google Drive</strong><button type="button" class="light" onclick="closeDrivePicker()">✕</button></div>
+  <p class="note">Selecione um arquivo para preencher somente o link no material.</p>
+  <div class="drive-search"><input id="driveQuery" placeholder="Pesquisar arquivos pelo nome" onkeydown="if(event.key==='Enter')searchDrivePicker()"><button type="button" class="primary" onclick="searchDrivePicker()">Buscar</button></div>
+  <div class="drive-picker-toolbar"><button type="button" class="light" onclick="resetDrivePickerToRoot()">Meu Drive</button><button type="button" class="light" id="driveBack" onclick="goDriveParent()">↑ Voltar</button><span id="driveFolderName"></span></div>
+  <div id="driveResults" class="drive-results" aria-live="polite">Carregando...</div>
+  <button type="button" class="light" onclick="closeDrivePicker()">Cancelar</button>
+</section>
+<script>
+/* Preview V9 offline: read-only. Reads the same local IndexedDB snapshot as the tested prototype. */
+(function(){
+ const warning='Prévia V9 em modo leitura. Para criar ou editar, utilize o aplicativo offline de testes. Nenhuma gravação será realizada nesta prévia.';
+ const date=s=>{let m=String(s||'').match(/^(\d\d)\/(\d\d)\/(\d{4})/);return m?m[3]+'-'+m[2]+'-'+m[1]:String(s||'').slice(0,10)};
+ const yes=s=>String(s||'').toLowerCase()==='sim';
+ function loadSnapshot(){return new Promise((resolve,reject)=>{let r=indexedDB.open('kanban-leitura-copia-v1',1);r.onerror=()=>reject(r.error);r.onsuccess=()=>{let d=r.result;let t=d.transaction('cache','readonly').objectStore('cache').get('snapshot');t.onsuccess=()=>{d.close();resolve(t.result||null)};t.onerror=()=>reject(t.error)}})}
+ function convert(snapshot){const a=(snapshot?.tasks||[]).filter(t=>!yes(t.Excluido)).map(t=>({id:t.ID,title:t.Titulo||'',desc:t.Descricao||'',category:t.Categoria||'',project:t.Projeto||'',farm:t.Fazenda||'',urgency:t.Urgencia||'Não definida',priority:t.Prioridade||'Médio',status:t.Status||'A fazer',done:date(t.Data_conclusao),due:date(t.Prazo),planned:date(t.Data_planejada),next:t.Proxima_acao||'',sync:yes(t.Sincronizar_Google_Calendar),archived:yes(t.Arquivado),important:yes(t.Importante),links:t.Links||'',recurrence:t.Recorrencia||'Nenhuma',origin:t.Recorrencia_origem||'',season:t.Safra||'',agendaStart:date(t.Agenda_inicio),agendaEnd:date(t.Agenda_fim),agendaStartTime:t.Agenda_hora_inicio||'',agendaEndTime:t.Agenda_hora_fim||'',agendaAllDay:yes(t.Agenda_dia_inteiro),agendaLocation:t.Agenda_local||'',agendaType:t.Agenda_tipo||'',reminderDays:t.Lembrete_dias||'',calendarEventId:t.Google_Event_ID||'',updated:t.Atualizado_em||'',studyTopicId:t.Estudo_Topico_ID||'',template:yes(t.Modelo),subs:(t.subs||[]).map(s=>({id:s.Subtask_ID,title:s.Titulo||'',desc:s.Descricao||'',status:s.Status||'A fazer',start:date(s.Data_inicio),due:date(s.Prazo),planned:date(s.Data_planejada),done:date(s.Data_conclusao),sync:yes(s.Sincronizar_Google_Calendar)}))}));return {tasks:a,farms:[],projects:[],settings:{},today:new Date().toLocaleDateString('en-CA',{timeZone:'America/Cuiaba'})}}
+ const bridge={getAppData:async()=>{const s=await loadSnapshot();if(!s)throw Error('Não há dados locais. Abra o aplicativo offline de testes e carregue a cópia primeiro.');return convert(s)},getStudies:async()=>({areas:[],topics:[],materials:[]})};
+ function chain(ok,fail){return new Proxy({}, {get(_,prop){if(prop==='withSuccessHandler')return cb=>chain(cb,fail);if(prop==='withFailureHandler')return cb=>chain(ok,cb);return (...args)=>{Promise.resolve().then(()=>{if(!bridge[prop])throw Error(warning);return bridge[prop](...args)}).then(v=>ok&&ok(v)).catch(e=>fail?fail(e):alert(e.message))}}})}
+ window.google={script:{run:chain(null,null)}};
+ document.addEventListener('DOMContentLoaded',()=>{let n=document.createElement('div');n.textContent='PRÉVIA V9 — SOMENTE LEITURA • Dados locais do navegador • Nenhuma gravação no Google Sheets';n.style.cssText='position:sticky;top:0;z-index:99999;background:#ffecbd;color:#392500;text-align:center;padding:11px;font:600 13px Arial';document.body.prepend(n)});
+})();
+</script>
+<script>
+const statuses=['A fazer','Em andamento','Aguardando','Concluído'];
+const columnDesc={'A fazer':'Atividades pendentes','Em andamento':'Atividades em execução','Aguardando':'Dependem de terceiros','Concluído':'Atividades finalizadas','Estudos':'Tópicos e progresso'};
+const studyStatuses=['Não iniciado','Em estudo','Revisar','Concluído'];
+let studies={areas:[],topics:[],materials:[]},sortMode='priority',expandedColumn='',collapsedColumns=new Set(),showAllDone=false;
+let tasks=[];
+let current=null;
+let farms=[];
+let serverToday="";let weekOffset=0;
+let summaryYear=new Date().getFullYear();
+const localISO=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const todayISO=()=>serverToday||localISO(new Date());
+const br=d=>d?d.split('-').reverse().join('/'):'';
+function active(t){return !t.archived&&!t.template&&!['Concluído','Cancelado'].includes(t.status)}
+function over(t){return !!(t.due&&active(t)&&t.due<todayISO())}
+const priorityRank={'Crítico':0,'Médio':1,'Longo prazo':2,'Não definida':3};
+const urgencyRank={'Urgente':0,'Não urgente':1,'Não definida':2};
+const stampBR=s=>{const m=String(s||'').match(/^(\d{2})\/(\d{2})\/(\d{4})(?: (\d{2}:\d{2}:\d{2}))?/);return m?m[3]+m[2]+m[1]+(m[4]||''):''};
+const orderTasks=a=>a.slice().sort((x,y)=>{
+ if(sortMode==='due')return (x.due||'9999-12-31').localeCompare(y.due||'9999-12-31')|| (priorityRank[x.priority]??3)-(priorityRank[y.priority]??3);
+ if(sortMode==='recent')return stampBR(y.updated).localeCompare(stampBR(x.updated))||x.title.localeCompare(y.title);
+ return (urgencyRank[x.urgency]??2)-(urgencyRank[y.urgency]??2)||(priorityRank[x.priority]??3)-(priorityRank[y.priority]??3)||(x.due||'9999').localeCompare(y.due||'9999');
+});
+function setSortMode(mode){sortMode=mode;try{localStorage.setItem('kanbanSortV6',mode)}catch(e){}render()}
+function initSortMode(){try{sortMode=localStorage.getItem('kanbanSortV6')||'priority'}catch(e){}if(!['priority','due','recent'].includes(sortMode))sortMode='priority';document.getElementById('sortMode').value=sortMode;}
+function filtered(){const q=document.getElementById('search').value.trim().toLocaleLowerCase('pt-BR'),cat=categoryFilter.value,farm=farmFilter.value;return orderTasks(tasks.filter(t=>!t.archived&&!t.template&&(!q||[t.title,t.desc,t.project,t.farm,t.next].join(' ').toLocaleLowerCase('pt-BR').includes(q))&&(!priority.value||t.priority===priority.value)&&(!urgency.value||t.urgency===urgency.value)&&(!cat||t.category===cat)&&(!farm||t.farm===farm)&&(!document.getElementById('seasonFilter').value||t.season===document.getElementById('seasonFilter').value)))}
+function taskColumn(t){if(t.status==='Caixa de entrada'||t.status==='A fazer')return 'A fazer';if(t.status==='Fazer agora'||t.status==='Em andamento')return 'Em andamento';return t.status;}
+function toggleColumn(name){if(expandedColumn===name){expandedColumn='';}else{expandedColumn=name;collapsedColumns.delete(name);}renderBoard();}
+function foldColumn(name){if(expandedColumn===name)expandedColumn='';if(collapsedColumns.has(name))collapsedColumns.delete(name);else collapsedColumns.add(name);renderBoard();}
+function renderBoard(){
+ const f=filtered().filter(t=>t.status!=='Cancelado');const names=[...statuses,'Estudos'];
+ const board=document.getElementById('board');
+ board.style.gridTemplateColumns=names.map(name=>collapsedColumns.has(name)?'44px':expandedColumn===name?'minmax(320px,2fr)':'minmax(205px,1fr)').join(' ');
+ board.innerHTML=names.map(name=>{
+ const isStudy=name==='Estudos',collapsed=collapsedColumns.has(name),arr=isStudy?[]:f.filter(t=>taskColumn(t)===name);
+ const visible=name==='Concluído'&&!showAllDone?arr.slice().sort((a,b)=>(b.done||'').localeCompare(a.done||'' )).slice(0,5):arr;
+ const summary=isStudy?studyTopicSummary():'';
+ const count=isStudy?studies.topics.filter(t=>t.status!=='Concluído').length:arr.length;
+ return `<section class="col col-${isStudy?'studies':'tasks'} ${collapsed?'is-collapsed':''} ${expandedColumn===name?'is-expanded':''}">
+  <div class="head"><div class="col-label"><strong>${escapeHTML(name)}</strong><small>${columnDesc[name]}</small></div><span class="count">${count}</span><div class="col-controls"><button title="${collapsed?'Mostrar coluna':'Recolher coluna'}" aria-label="${collapsed?'Mostrar':'Recolher'} ${name}" onclick="foldColumn('${name}')">${collapsed?'›':'−'}</button><button title="${expandedColumn===name?'Voltar ao tamanho normal':'Expandir coluna'}" aria-label="Expandir ${name}" onclick="toggleColumn('${name}')">${expandedColumn===name?'↙':'⤢'}</button></div></div>
+  <div class="col-body">${isStudy?summary:visible.map(card).join('')||'<p class="note">Nenhuma atividade.</p>'}${name==='Concluído'&&arr.length>5?`<button class="light show-all" onclick="showAllDone=!showAllDone;renderBoard()">${showAllDone?'Mostrar somente 5':'Ver todas ('+arr.length+')'}</button>`:''}</div>
+ </section>`;}).join('');
+}
+function render(){renderBoard();renderAgenda();renderSummary();renderMetrics();renderProjects();renderExtra();renderAppointments();renderWeeklyReview()}
+
+function progress(t){const n=(t.subs||[]).length,k=(t.subs||[]).filter(s=>s.status==='Concluído').length;return n?`<div class="sub-progress">${k}/${n} etapas concluídas</div><div class="progress-track"><div class="progress-fill" style="width:${Math.round(100*k/n)}%"></div></div>`:''}
+function card(t){const done=t.status==='Concluído';return `<div class="card ${done?'task-done':''}" onclick="openT('${escapeHTML(t.id)}')"><div class="task-head"><input class="task-check" type="checkbox" aria-label="Concluir atividade" ${done?'checked':''} onclick="event.stopPropagation()" onchange="toggleDone(event,'${escapeHTML(t.id)}',this.checked)"><div class="title">${escapeHTML(t.title)}</div><button class="star ${t.important?'chosen':''}" title="Importante" onclick="event.stopPropagation();toggleStar('${t.id}')">${t.important?'★':'☆'}</button></div><div class="meta">${escapeHTML(t.project||'')}${t.farm?' · '+escapeHTML(t.farm):''}</div><div class="badges">${t.status==='Caixa de entrada'?'<span class="badge">Caixa de entrada</span>':''}${t.status==='Fazer agora'?'<span class="badge urgent">Foco agora</span>':''}<span class="badge ${t.priority==='Crítico'?'critical':''}">${escapeHTML(t.priority||'Não definida')}</span><span class="badge ${t.urgency==='Urgente'?'urgent':''}">${escapeHTML(t.urgency||'Não definida')}</span>${t.planned?`<span class="badge">Planejada ${br(t.planned)}</span>`:''}${t.due?`<span class="badge ${over(t)?'over':''}">Prazo ${br(t.due)}</span>`:''}</div>${progress(t)}<div class="card-quick"><button type="button" title="Adicionar ao Meu Dia" onclick="event.stopPropagation();planDate('${t.id}',todayISO())">☀ Hoje</button><button type="button" title="Reagendar" onclick="event.stopPropagation();planCustom('${t.id}')">▦ Data</button>${!done?`<button type="button" title="Mover para Em andamento" onclick="event.stopPropagation();quickStatus('${t.id}','Em andamento')">▶</button>`:''}</div></div>`}
+function quickStatus(id,status){const t=tasks.find(x=>x.id===id);if(!t)return;mutate('saveTask',[{...t,status}]);}
+
+function toggleDone(event,id,checked){
+ event.stopPropagation();
+ const t=tasks.find(x=>x.id===id);
+ if(!t)return;
+ const checkbox=event.target;
+ checkbox.disabled=true;
+ const payload={...t,status:checked?'Concluído':'A fazer'};
+ google.script.run.withSuccessHandler(()=>loadData()).withFailureHandler(err=>{
+   checkbox.checked=!checked;checkbox.disabled=false;
+   alert('Não foi possível atualizar a atividade: '+(err.message||err));
+ }).saveTask(payload);
+}
+function openT(id){const found=tasks.find(x=>x.id===id);if(!found)return;current=JSON.parse(JSON.stringify(found));editForm(current)}
+function editForm(t){
+const d=document.getElementById('detail');
+d.innerHTML=`<h2>${t.id?'Editar atividade':'Nova atividade'}</h2>
+<label>Título</label><input id="eTitle"><label>Categoria</label><select id="eCategory"><option>Trabalho</option><option>Pessoal</option></select>
+<div class="row"><div><label>Projeto</label><input id="eProject"></div><div><label>Fazenda</label><input id="eFarm"></div></div>
+<div class="row"><div><label>Prioridade</label><select id="ePriority"><option>Crítico</option><option>Médio</option><option>Longo prazo</option><option>Não definida</option></select></div>
+<div><label>Urgência</label><select id="eUrgency"><option>Urgente</option><option>Não urgente</option><option>Não definida</option></select></div></div>
+<label>Safra (opcional)</label><input id="eSeason" placeholder="Ex.: 2026/27 ou Permanente"><label>Status</label><select id="eStatus">${statuses.map(x=>`<option>${x}</option>`).join('')}</select>
+<div class="row"><div><label>🗓 Data planejada</label><input type="date" id="ePlanned"></div><div><label>📅 Prazo</label><input type="date" id="eDue"></div></div>
+<div class="section"><h3>Compromisso / Google Calendar</h3><p class="note">Somente atividades marcadas serão sincronizadas. Data de término vazia = mesma data de início.</p><div class="row"><div><label>Data de início</label><input type="date" id="eAgendaStart"></div><div><label>Data de término (opcional)</label><input type="date" id="eAgendaEnd"></div></div><p><label><input type="checkbox" style="width:auto" id="eAllDay" onchange="toggleAgendaHours()"> Dia inteiro</label></p><div id="agendaHours" class="row"><div><label>Início (hora)</label><input type="time" id="eAgendaStartTime"></div><div><label>Término (hora)</label><input type="time" id="eAgendaEndTime"></div></div><label>Local / endereço</label><input id="eAgendaLocation" placeholder="Fazenda, município, endereço..."><label>Tipo de compromisso</label><select id="eAgendaType"><option value="">Não definido</option><option>Visita técnica</option><option>Reunião</option><option>Deslocamento</option><option>Apresentação</option><option>Outro</option></select><div id="agendaConflicts" class="agenda-conflicts" aria-live="polite"></div><button type="button" class="light" onclick="showAgendaConflicts()">Verificar conflitos de agenda</button></div><div class="row"><div><label>Data de conclusão (editável)</label><input type="date" id="eDone"></div></div><p><label><input style="width:auto" type="checkbox" id="eSync"> Adicionar ao Google Calendar (opcional)</label></p>
+<div class="row"><div><label>Recorrência</label><select id="eRecurrence"><option>Nenhuma</option><option>Diária</option><option>Semanal</option><option>Quinzenal</option><option>Mensal</option></select></div><div><label><input type="checkbox" id="eImportant" style="width:auto"> ★ Importante</label><label><input type="checkbox" id="eTemplate" style="width:auto"> Usar como modelo</label></div></div><label>Links de documentos e pastas (um por linha)</label><textarea id="eLinks" rows="2" placeholder="https://drive.google.com/..."></textarea><label>Descrição</label><textarea id="eDesc" rows="4"></textarea>
+<label>Próxima ação</label><textarea id="eNext" rows="2"></textarea><label>Tópico de estudo (opcional)</label><select id="eStudyTopic"><option value="">Sem vínculo</option>${studies.topics.map(x=>`<option value="${escapeHTML(x.id)}">${escapeHTML(x.title)}</option>`).join('')}</select>
+<div class="section"><h3>Subtarefas / etapas</h3><div id="subs">${(t.subs||[]).map((s,i)=>subHTML(s,i)).join('')||'<div class="note">Nenhuma etapa cadastrada.</div>'}</div><button class="light" onclick="addSub()">＋ Adicionar etapa</button></div>
+<div id="historySection" class="section"></div><div class="actions"><button class="primary" onclick="saveTask()">Salvar</button>${t.id?`<button class="light" onclick="duplicateCurrent(false)">Duplicar</button><button class="light" onclick="duplicateCurrent(true)">Criar modelo</button><button class="light" onclick="archiveCurrent()">${t.archived?'Restaurar':'Arquivar'}</button>`:''}<button class="light" onclick="closeD()">Cancelar</button></div>`;
+const val=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??''};
+val('eSeason',t.season||'');val('eAgendaStart',t.agendaStart||'');val('eAgendaEnd',t.agendaEnd||'');val('eAgendaStartTime',t.agendaStartTime||'08:00');val('eAgendaEndTime',t.agendaEndTime||'17:00');val('eAgendaLocation',t.agendaLocation||'');val('eAgendaType',t.agendaType||'');document.getElementById('eAllDay').checked=t.agendaAllDay!==false;toggleAgendaHours();val('eTitle',t.title); val('eCategory',t.category||'Trabalho'); val('eDone',t.done); val('eProject',t.project); val('eFarm',t.farm);
+val('ePriority',t.priority||'Médio'); val('eUrgency',t.urgency||'Não definida'); val('eStatus',t.status||'Caixa de entrada');
+val('eStudyTopic',t.studyTopicId||'');val('eRecurrence',t.recurrence||'Nenhuma');val('eLinks',t.links||'');document.getElementById('eImportant').checked=!!t.important;document.getElementById('eTemplate').checked=!!t.template;val('ePlanned',t.planned); val('eDue',t.due); val('eDesc',t.desc); val('eNext',t.next);
+document.getElementById('eSync').checked=!!t.sync;
+if(t.id)renderHistory(t.id);document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');
+ ['eAgendaStart','eAgendaEnd','eAgendaStartTime','eAgendaEndTime','eAllDay'].forEach(k=>document.getElementById(k)?.addEventListener('change',showAgendaConflicts));if(t.agendaStart)showAgendaConflicts();
+}
+function subHTML(s,i){return `<div class="sub"><div class="subtop"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" class="sub-check" ${s.status==='Concluído'?'checked':''} onchange="toggleDraftSub(${i},this.checked)"><span class="${s.status==='Concluído'?'sub-done':''}">${escapeHTML(s.title)}</span></label><button class="light" onclick="removeSub(${i})">×</button></div><small>Planejada: ${br(s.planned)||'—'} · Prazo: ${br(s.due)||'—'} · Concluída: ${br(s.done)||'—'}</small></div>`}
+function syncDraft(){if(!current)return;const g=id=>document.getElementById(id);Object.assign(current,{title:g('eTitle').value,category:g('eCategory').value,project:g('eProject').value,farm:g('eFarm').value,priority:g('ePriority').value,urgency:g('eUrgency').value,status:g('eStatus').value,done:g('eDone').value,planned:g('ePlanned').value,due:g('eDue').value,sync:g('eSync').checked,season:g('eSeason').value,agendaStart:g('eAgendaStart').value,agendaEnd:g('eAgendaEnd').value,agendaStartTime:g('eAgendaStartTime').value,agendaEndTime:g('eAgendaEndTime').value,agendaAllDay:g('eAllDay').checked,agendaLocation:g('eAgendaLocation').value,agendaType:g('eAgendaType').value,important:g('eImportant').checked,template:g('eTemplate').checked,recurrence:g('eRecurrence').value,studyTopicId:g('eStudyTopic').value,links:g('eLinks').value,desc:g('eDesc').value,next:g('eNext').value});}
+function toggleDraftSub(i,checked){syncDraft();current.subs[i].status=checked?'Concluído':'A fazer';current.subs[i].done=checked?todayISO():'';editForm(current)}
+function addSub(){syncDraft();const title=prompt('Nome da etapa:');if(!title||!title.trim())return;current.subs.push({title:title.trim(),status:'A fazer',planned:'',due:'',done:'',sync:false});editForm(current)}
+function removeSub(i){syncDraft();if(!confirm('Remover esta etapa ao salvar?'))return;current.subs.splice(i,1);editForm(current)}
+function saveTask(){syncDraft();if(!current.title.trim()){alert('Informe o título.');return}if(current.sync&&!current.agendaStart){alert('Informe a data de início para sincronizar com Google Calendar.');return}if(current.agendaEnd&&current.agendaStart&&current.agendaEnd<current.agendaStart){alert('A data de término não pode ser anterior à data de início.');return}if(current.id&&tasks.find(t=>t.id===current.id)?.calendarEventId&&!current.sync&&!confirm('Desativar a sincronização e remover o evento correspondente do Google Calendar?'))return;if(current.status==='Concluído'&&!current.done)current.done=todayISO();if(current.status!=='Concluído')current.done='';const payload=JSON.parse(JSON.stringify(current));const btn=document.querySelector('#detail .actions .primary');btn.disabled=true;btn.textContent='Verificando agenda...';
+ const persist=()=>{btn.textContent='Salvando...';google.script.run.withSuccessHandler(result=>{closeD();loadData();if(result&&result.calendarWarning)alert(result.calendarWarning)}).withFailureHandler(err=>{btn.disabled=false;btn.textContent='Salvar';alert('Erro ao salvar: '+(err.message||err))}).saveTask(payload)};
+ if(!payload.agendaStart){persist();return;}
+ google.script.run.withSuccessHandler(items=>{
+  if(items.length){const msg=items.map(t=>'• '+t.title+' ('+br(t.from)+(t.to!==t.from?' a '+br(t.to):'')+')').join('\n');if(!confirm('Possível conflito de agenda com:\n'+msg+'\n\nDeseja salvar mesmo assim?')){btn.disabled=false;btn.textContent='Salvar';return;}}
+  persist();
+ }).withFailureHandler(e=>{btn.disabled=false;btn.textContent='Salvar';alert('Não foi possível verificar os conflitos de agenda. Tente novamente: '+(e.message||e))}).checkAgendaConflicts(payload)}
+function newTask(){current={id:'',title:'',category:'Trabalho',project:'',farm:'',urgency:'Não definida',priority:'Não definida',status:'Caixa de entrada',due:'',done:'',planned:'',desc:'',next:'',sync:false,important:false,template:false,recurrence:'Nenhuma',studyTopicId:'',links:'',season:'',agendaStart:'',agendaEnd:'',agendaStartTime:'08:00',agendaEndTime:'17:00',agendaAllDay:true,agendaLocation:'',agendaType:'',subs:[]};editForm(current)}
+function closeD(){drawer.classList.remove('open');overlay.classList.remove('open')}
+function renderAgenda(){
+ const today=new Date(todayISO()+'T12:00:00'),weekday=today.getDay(),mondayOffset=(weekday+6)%7,start=new Date(today.getFullYear(),today.getMonth(),today.getDate()-mondayOffset+weekOffset*7),days=[];document.getElementById('weekRange').textContent=br(localISO(start))+' – '+br(localISO(new Date(start.getFullYear(),start.getMonth(),start.getDate()+6)));
+ for(let i=0;i<7;i++){let d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+i),iso=localISO(d),ev=[];
+ tasks.filter(t=>!t.archived&&!t.template).forEach(t=>{if(t.agendaStart&&iso>=t.agendaStart&&iso<=(t.agendaEnd||t.agendaStart))ev.push({id:t.id,title:'📍 '+t.title});if(t.planned===iso&&!t.agendaStart)ev.push({id:t.id,title:t.title});(t.subs||[]).forEach(s=>{if(s.planned===iso)ev.push({id:t.id,title:s.title+' · '+t.title})})});
+ days.push(`<div class="day"><h3>${['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'][d.getDay()]}</h3><div class="date">${br(iso)}</div>${ev.map(x=>`<button class="event clickable-event" onclick="openT('${x.id}')">${escapeHTML(x.title)}</button>`).join('')||'<div class="note">Sem atividades</div>'}</div>`)}
+ agenda.innerHTML=days.join('');document.querySelector('#hojeView h2').textContent='Meu Dia · '+br(todayISO());const open=tasks.filter(active),overdue=open.filter(over),planned=open.filter(t=>!over(t)&&t.planned===todayISO()),urgent=open.filter(t=>!over(t)&&t.planned!==todayISO()&&t.urgency==='Urgente'&&!t.planned);const groups=[['Atrasadas',overdue],['Planejadas para hoje',planned],['Urgentes sem planejamento',urgent]];todayList.innerHTML=groups.map(([label,arr])=>`<section class="today-group"><h3>${label} (${arr.length})</h3>${arr.length?orderTasks(arr).map(dayCard).join(''):'<div class="note">Nenhuma atividade.</div>'}</section>`).join('');renderSuggestions();
+}
+function escapeHTML(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderMetrics(){const openTasks=tasks.filter(active);document.getElementById('mOver').textContent=openTasks.filter(over).length;document.getElementById('mToday').textContent=openTasks.filter(t=>t.planned===todayISO()).length;const all=document.querySelectorAll('#kanbanView .metric b');all[2].textContent=openTasks.filter(t=>t.due&&t.due>=todayISO()&&t.due<=localISO(new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()+7))).length;all[3].textContent=openTasks.filter(t=>t.priority==='Crítico').length;all[4].textContent=openTasks.filter(t=>t.status==='Aguardando').length;}
+function renderProjects(){const visible=tasks.filter(t=>!t.archived&&!t.template);const section=(field,title)=>{const groups={};visible.forEach(t=>{const k=t[field]||'Sem '+(field==='farm'?'fazenda':'projeto');(groups[k]??=[]).push(t)});return `<h3>${title}</h3><div class="group-grid">${Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>`<div class="card"><b>${escapeHTML(k)}</b><p>${v.length} atividades · ${v.filter(active).length} abertas · ${v.filter(over).length} atrasadas · ${v.filter(t=>t.status==='Concluído').length} concluídas</p></div>`).join('')}</div>`};document.getElementById('projetosView').innerHTML='<h2>Projetos e fazendas</h2>'+section('project','Por projeto')+section('farm','Por fazenda')}
+function changeYear(delta){summaryYear+=delta;renderSummary()}
+function renderSummary(){
+ const completed=tasks.filter(t=>!t.template&&t.status==='Concluído'&&t.done&&t.done.startsWith(String(summaryYear))),perDay={},months=Array(12).fill(0);
+ completed.forEach(t=>{(perDay[t.done]??=[]).push(t);months[Number(t.done.slice(5,7))-1]++});
+ const activeDays=Object.keys(perDay).length,total=completed.length,eligible=tasks.filter(t=>!t.done||t.done.slice(0,4)===String(summaryYear)).length;
+ const maxMonth=Math.max(...months),bestMonth=maxMonth?new Intl.DateTimeFormat('pt-BR',{month:'long'}).format(new Date(summaryYear,months.indexOf(maxMonth),1)):'—';
+ document.getElementById('selectedYear').textContent=summaryYear;
+ document.getElementById('yearMetrics').innerHTML=[['Concluídas no ano',total],['Dias com conclusões',activeDays],['Conclusões registradas',completed.length],['Mês mais produtivo',bestMonth]].map(([label,value])=>`<div class="year-stat"><span>${label}</span><b>${value}</b></div>`).join('');
+ document.getElementById('yearTotal').textContent=total+' atividade(s) concluída(s)';
+ const first=new Date(summaryYear,0,1),start=new Date(summaryYear,0,1-first.getDay()),last=new Date(summaryYear,11,31),weeks=Math.ceil(((last-start)/86400000+1)/7),cells=[],labels=[];
+ for(let w=0;w<weeks;w++){
+
+ for(let day=0;day<7;day++){
+ const d=new Date(start.getFullYear(),start.getMonth(),start.getDate()+w*7+day),iso=localISO(d),inside=d.getFullYear()===summaryYear,n=inside?(perDay[iso]||[]).length:0,level=n===0?0:1;
+ cells.push(inside?`<button type="button" class="heat day level${level}" title="${br(iso)}: ${n} conclusão(ões)" aria-label="${br(iso)}: ${n} conclusões" onclick="showYearDay('${iso}')"></button>`:'<span class="heat outside" aria-hidden="true"></span>');
+ }}
+ for(let m=0;m<12;m++){const firstOfMonth=new Date(summaryYear,m,1);const column=Math.floor(Math.round((firstOfMonth-start)/86400000)/7)+1;labels.push(`<span style="grid-column:${column}">${new Intl.DateTimeFormat('pt-BR',{month:'short'}).format(firstOfMonth)}</span>`);}
+ document.getElementById('yearHeatmap').innerHTML=`<div class="month-labels" style="--weeks:${weeks}">${labels.join('')}</div><div class="heatmap-layout"><div class="weekday-labels"><span>Dom</span><span></span><span>Ter</span><span></span><span>Qui</span><span></span><span>Sáb</span></div><div class="heatmap-grid" style="--weeks:${weeks}">${cells.join('')}</div></div>`;
+ document.getElementById('yearDetail').textContent='Selecione um dia para visualizar as atividades concluídas.';
+}
+function showYearDay(date){const matches=tasks.filter(t=>!t.template&&t.status==='Concluído'&&t.done===date);document.getElementById('yearDetail').innerHTML=`<strong>${br(date)} · ${matches.length} conclusão(ões)</strong>`+(matches.length?`<ul>${matches.map(t=>`<li>${escapeHTML(t.title)} <button class="light" onclick="openT('${t.id}')">Abrir</button></li>`).join('')}</ul>`:'<p>Nenhuma atividade concluída neste dia.</p>')}
+function showView(v){['kanban','agenda','revisao','hoje','projetos','resumo','importantes','modelos','arquivadas','compromissos','configV5','estudos'].forEach(x=>{document.getElementById(x+'View').classList.toggle('hidden',x!==v);let b=document.getElementById('n'+x[0].toUpperCase()+x.slice(1));if(b)b.classList.toggle('active',x===v)});renderAgenda();if(v==='resumo')renderSummary();if(v==='estudos')renderStudies();if(v==='revisao')renderWeeklyReview()}
+function mutate(call,args,after){let runner=google.script.run.withSuccessHandler(()=>{if(after)after();loadData()}).withFailureHandler(e=>alert('Erro: '+(e.message||e)));runner[call](...args)}
+function toggleStar(id){const t=tasks.find(x=>x.id===id);if(t)mutate('setImportant',[id,!t.important]);}
+function dayCard(t){return `<div class="day-card">${card(t)}<div class="day-actions"><button class="light" onclick="event.stopPropagation();planDate('${t.id}', '${todayISO()}')">Hoje</button><button class="light" onclick="event.stopPropagation();planDate('${t.id}', '${localISO(new Date(new Date(todayISO()+'T12:00:00').getTime()+86400000))}')">Amanhã</button><button class="light" onclick="event.stopPropagation();planCustom('${t.id}')">Outra data</button></div></div>`;}
+function planDate(id,date){mutate('setPlanned',[id,date]);}
+function planCustom(id){const date=prompt('Planejar para (AAAA-MM-DD). Deixe vazio para remover:',todayISO());if(date!==null)planDate(id,date.trim());}
+function renderSuggestions(){const list=orderTasks(tasks.filter(t=>active(t)&&t.planned!==todayISO()&&(over(t)||t.urgency==='Urgente'||t.important))).slice(0,12);document.getElementById('daySuggestions').innerHTML=`<section class="today-group"><h3>💡 Sugestões para Meu Dia (${list.length})</h3><p class="note">A inclusão é manual. Nenhum prazo será alterado.</p>${list.map(t=>`<div class="suggest-row"><span>${escapeHTML(t.title)} ${t.due?'· '+br(t.due):''}</span><button class="light" onclick="planDate('${t.id}','${todayISO()}')">+ Meu Dia</button></div>`).join('')||'<p class="note">Sem sugestões.</p>'}</section>`;}
+function renderExtra(){const put=(id,arr,empty)=>document.getElementById(id).innerHTML=arr.length?orderTasks(arr).map(card).join(''):`<p class="note">${empty}</p>`;put('importantList',tasks.filter(t=>t.important&&!t.archived&&!t.template),'Nenhuma atividade marcada.');put('modelList',tasks.filter(t=>t.template&&!t.archived),'Nenhum modelo cadastrado.');put('archiveList',tasks.filter(t=>t.archived),'Nenhuma atividade arquivada.');}
+function duplicateCurrent(template){if(!current?.id)return;if(!confirm(template?'Criar modelo desta atividade?':'Duplicar esta atividade?'))return;mutate('duplicateTask',[current.id,template],closeD);}
+function archiveCurrent(){if(!current?.id)return;if(!current.archived&&!['Concluído','Cancelado'].includes(current.status)){alert('Conclua ou cancele a atividade antes de arquivar.');return}if(!confirm(current.archived?'Restaurar atividade?':'Arquivar atividade?'))return;mutate('archiveTask',[current.id,!current.archived],closeD);}
+function renderHistory(id){const el=document.getElementById('historySection');if(!el)return;el.innerHTML=`<h3>Histórico e observações</h3><textarea id="newNote" rows="2" placeholder="Registrar andamento da atividade..."></textarea><button class="light" onclick="saveNote('${id}')">Registrar observação</button><div id="historyList" class="history-list">Carregando...</div>`;google.script.run.withSuccessHandler(list=>{const target=document.getElementById('historyList');if(!target||current?.id!==id)return;target.innerHTML=(list||[]).map(x=>`<div class="history-item"><small>${escapeHTML(x.Data_hora)} · ${escapeHTML(x.Acao)}</small><p>${escapeHTML(x.Observacao||[x.Campo,x.Valor_anterior,x.Valor_novo].filter(Boolean).join(' → '))}</p></div>`).join('')||'<p class="note">Nenhum registro.</p>';}).withFailureHandler(e=>{const target=document.getElementById('historyList');if(target)target.textContent=e.message||String(e)}).getHistory(id);}
+function saveNote(id){const el=document.getElementById('newNote');const text=el?.value.trim();if(!text)return;google.script.run.withSuccessHandler(()=>renderHistory(id)).withFailureHandler(e=>alert(e.message||e)).appendNote(id,text);}
+function shiftWeek(delta){weekOffset=delta===0?0:weekOffset+delta;renderAgenda()}
+function toggleAgendaHours(){const show=!document.getElementById('eAllDay').checked;document.getElementById('agendaHours').classList.toggle('hidden',!show);}
+function newAppointment(){newTask();document.getElementById('eTitle').placeholder='Ex.: Visita técnica — Fazenda XXX';document.getElementById('eAgendaType').value='Visita técnica';document.getElementById('eAgendaStart').value=todayISO();document.getElementById('eSync').checked=true;document.getElementById('eAllDay').checked=true;toggleAgendaHours();}
+function updateSeasonFilter(){const el=document.getElementById('seasonFilter'),old=el.value,items=[...new Set(tasks.map(t=>t.season).filter(Boolean))].sort().reverse();el.innerHTML='<option value="">Todas as safras</option>'+items.map(s=>`<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');el.value=items.includes(old)?old:'';}
+function setDensity(v){document.body.classList.toggle('compact-view',v==='compact');try{localStorage.setItem('kanbanDensity',v)}catch(e){}}
+function initDensity(){let v='detail';try{v=localStorage.getItem('kanbanDensity')||'detail'}catch(e){}document.getElementById('viewDensity').value=v;setDensity(v)}
+function renderAppointments(){const arr=tasks.filter(t=>!t.archived&&!t.template&&t.agendaStart).sort((a,b)=>a.agendaStart.localeCompare(b.agendaStart));document.getElementById('appointmentsList').innerHTML=arr.length?arr.map(t=>`<div class="card" onclick="openT('${t.id}')"><div class="title">${escapeHTML(t.title)}</div><div class="meta">${br(t.agendaStart)}${t.agendaEnd&&t.agendaEnd!==t.agendaStart?' a '+br(t.agendaEnd):''} · ${t.agendaAllDay?'Dia inteiro':escapeHTML(t.agendaStartTime)+'–'+escapeHTML(t.agendaEndTime)} · ${escapeHTML(t.agendaLocation||t.farm||'')}</div><div class="badges"><span class="badge">${escapeHTML(t.agendaType||'Compromisso')}</span>${t.sync?'<span class="badge">Google Calendar ✓</span>':''}</div></div>`).join(''):'<p class="note">Nenhum compromisso cadastrado.</p>';}
+function saveReminderConfig(){const email=document.getElementById('reminderEmail').value,enabled=document.getElementById('reminderEnabled').checked;google.script.run.withSuccessHandler(()=>alert('Preferências salvas. Para envio automático, execute installDailyReminder uma vez no Apps Script.')).withFailureHandler(e=>alert(e.message||e)).saveReminderSettings(email,enabled);}
+function loadData(){
+ document.getElementById('board').innerHTML='<div class="note">Carregando dados...</div>';
+ google.script.run.withSuccessHandler(data=>{tasks=data.tasks||[];farms=data.farms||[];serverToday=data.today||'';updateFarmFilter();updateSeasonFilter();const c=data.settings||{};document.getElementById('reminderEmail').value=c.Resumo_email_destino||'';document.getElementById('reminderEnabled').checked=c.Resumo_email_ativo==='Sim';render();}).withFailureHandler(err=>{document.getElementById('board').innerHTML='<div class="card">Erro ao carregar: '+err.message+'</div>';}).getAppData();
+}
+function updateFarmFilter(){const select=document.getElementById('farmFilter'),old=select.value,names=[...new Set([...tasks.map(t=>t.farm),...farms.map(f=>f.Nome)].filter(Boolean))].sort();select.innerHTML='<option value="">Todas as fazendas</option>'+names.map(n=>`<option value="${escapeHTML(n)}">${escapeHTML(n)}</option>`).join('');select.value=names.includes(old)?old:''}
+
+/* V6: estudos linked by IDs; PDFs remain in Drive. */
+function studyAreaName(id){return studies.areas.find(a=>a.id===id)?.name||'Sem área';}
+function topicMaterials(id){return studies.materials.filter(m=>m.topicId===id);}
+function topicProgress(t){const m=topicMaterials(t.id),done=m.filter(x=>x.status==='Concluído').length;return {done,total:m.length,pct:m.length?Math.round(100*done/m.length):0};}
+function studyNext(t){if(t.next)return t.next;const next=topicMaterials(t.id).find(m=>m.status!=='Concluído');return next?'Continuar: '+next.title:(topicMaterials(t.id).length?'Materiais concluídos':'Definir próximo material');}
+function studyTopicSummary(){const arr=studies.topics.filter(t=>t.status!=='Concluído').sort((a,b)=>(a.status==='Em estudo'?0:1)-(b.status==='Em estudo'?0:1)||a.title.localeCompare(b.title)).slice(0,5);return arr.length?arr.map(t=>{const pr=topicProgress(t);return `<div class="study-summary-card" role="button" tabindex="0" onclick="goToStudy('${t.id}')" onkeydown="if(event.key==='Enter')goToStudy('${t.id}')"><div class="topic-title">${escapeHTML(t.title)}</div><div class="topic-area">${escapeHTML(studyAreaName(t.areaId))}</div><div class="study-meter"><div style="width:${pr.pct}%"></div></div><div class="study-summary-foot"><span>${pr.total?pr.done+'/'+pr.total+' materiais':'Sem materiais'}</span><span>${pr.pct}%</span></div><div class="next-step">↳ ${escapeHTML(studyNext(t))}</div></div>`}).join('')+`<button class="study-more" onclick="showView('estudos')">Ver todos os tópicos →</button>`:'<p class="note">Nenhum tópico ativo. <button class="light" onclick="showView(\'estudos\')">Criar estudos</button></p>';}
+function loadStudies(){google.script.run.withSuccessHandler(data=>{studies=data||{areas:[],topics:[],materials:[]};document.getElementById('studyAlert').textContent='';updateStudyAreaFilter();renderStudies();renderBoard();}).withFailureHandler(e=>{document.getElementById('studyAlert').textContent='Não foi possível carregar Estudos: '+(e.message||e)+'. Execute setupV6 no Apps Script e atualize a página.';renderBoard();}).getStudies();}
+function updateStudyAreaFilter(){const el=document.getElementById('studyAreaFilter'),old=el.value;el.innerHTML='<option value="">Todas as áreas</option>'+studies.areas.map(a=>`<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join('');el.value=studies.areas.some(a=>a.id===old)?old:'';}
+function renderStudies(){const stats=document.getElementById('studyStats'),out=document.getElementById('studyLibrary');if(!stats||!out)return;const total=studies.materials.length,done=studies.materials.filter(m=>m.status==='Concluído').length;stats.innerHTML=`<div class="study-stat"><strong>${studies.topics.length}</strong><span>Tópicos</span></div><div class="study-stat"><strong>${studies.topics.filter(t=>t.status==='Em estudo').length}</strong><span>Em estudo</span></div><div class="study-stat"><strong>${done}/${total}</strong><span>Materiais concluídos</span></div>`;
+ const areaId=document.getElementById('studyAreaFilter').value,q=document.getElementById('studySearch').value.trim().toLocaleLowerCase('pt-BR');const areaList=studies.areas.filter(a=>!areaId||a.id===areaId);out.innerHTML=areaList.map(area=>{const topics=studies.topics.filter(t=>t.areaId===area.id&&(!q||[t.title,t.desc,studyNext(t),area.name,...topicMaterials(t.id).map(m=>m.title+' '+m.type+' '+m.notes)].join(' ').toLocaleLowerCase('pt-BR').includes(q)));if(!topics.length&&q)return '';return `<section class="study-section"><h3>▤ ${escapeHTML(area.name)} <span class="note">(${topics.length} tópicos)</span> <button class="light" onclick="openStudyArea('${area.id}')" title="Editar área">Editar área</button></h3><div class="study-topics">${topics.map(studyTopicCard).join('')||'<p class="note">Nenhum tópico nesta área.</p>'}</div></section>`;}).join('')||'<div class="card"><p>Nenhuma área ou tópico encontrado. Crie uma área para começar.</p></div>';
+}
+function studyTopicCard(t){const pr=topicProgress(t),materials=topicMaterials(t.id);return `<article class="study-topic-card" id="study-${escapeHTML(t.id)}"><h4>${escapeHTML(t.title)}</h4><div class="study-topic-meta">${escapeHTML(t.status)} · ${pr.total} material(is)</div>${t.desc?`<p>${escapeHTML(t.desc)}</p>`:''}<div class="study-meter"><div style="width:${pr.pct}%"></div></div><div class="study-summary-foot"><span>${pr.done}/${pr.total} concluídos</span><span>${pr.pct}%</span></div><p><strong>Próxima ação:</strong> ${escapeHTML(studyNext(t))}</p>${t.review?`<p>Revisar em ${br(t.review)}</p>`:''}<div class="study-material-list">${materials.map(m=>`<div class="study-material">${m.url?`<a href="${escapeHTML(m.url)}" target="_blank" rel="noopener noreferrer" title="Abrir material">▤ ${escapeHTML(m.title)}</a>`:`<span>▤ ${escapeHTML(m.title)}</span>`}<select aria-label="Status de ${escapeHTML(m.title)}" onchange="updateMaterialStatus('${m.id}',this.value)">${studyStatuses.map(x=>`<option ${x===m.status?'selected':''}>${x}</option>`).join('')}</select><button class="light" onclick="openStudyMaterial('${m.id}')" title="Editar material">✎</button></div>`).join('')||'<p class="note">Nenhum material vinculado.</p>'}</div><div class="study-topic-actions"><button onclick="openStudyTopic('${t.id}')">Editar tópico</button><button onclick="openStudyMaterial('', '${t.id}')">＋ Material</button><button onclick="createStudyTask('${t.id}')">＋ Atividade</button></div></article>`;}
+function goToStudy(id){showView('estudos');document.getElementById('studyAreaFilter').value='';document.getElementById('studySearch').value='';renderStudies();setTimeout(()=>document.getElementById('study-'+id)?.scrollIntoView({behavior:'smooth',block:'center'}),50);}
+function createStudyTask(topicId){const t=studies.topics.find(x=>x.id===topicId);if(!t)return;newTask();current.studyTopicId=t.id;current.title='Estudar: '+t.title;current.project='Estudos';current.next=studyNext(t);const link=topicMaterials(topicId).find(m=>m.url)?.url||'';current.links=link;editForm(current);}
+function openStudyDrawer(title,html){document.getElementById('studyDrawerTitle').textContent=title;document.getElementById('studyForm').innerHTML=html;document.getElementById('studyDrawer').classList.add('open');document.getElementById('studyOverlay').classList.add('open');}
+function closeStudyDrawer(){document.getElementById('studyDrawer').classList.remove('open');document.getElementById('studyOverlay').classList.remove('open');}
+function studyActions(type,id){return `<div class="actions"><button class="primary" id="studySaveBtn" onclick="saveStudyUI('${type}')">Salvar</button><button class="light" onclick="closeStudyDrawer()">Cancelar</button>${id?`<button class="light" onclick="archiveStudyUI('${type}','${id}')">Arquivar</button>`:''}</div>`;}
+function openStudyArea(id=''){const a=studies.areas.find(x=>x.id===id)||{id:'',name:'',desc:''};openStudyDrawer(a.id?'Editar área':'Nova área',`<input type="hidden" id="stId" value="${escapeHTML(a.id)}"><label>Nome da área *</label><input id="stName" value="${escapeHTML(a.name)}" placeholder="Agronomia, Desenvolvimento pessoal, Idiomas..."><label>Descrição</label><textarea rows="3" id="stDesc">${escapeHTML(a.desc)}</textarea>${studyActions('area',a.id)}`);}
+function openStudyTopic(id=''){if(!studies.areas.length){alert('Cadastre uma área de conhecimento primeiro.');openStudyArea();return;}const t=studies.topics.find(x=>x.id===id)||{id:'',areaId:studies.areas[0].id,title:'',desc:'',status:'Não iniciado',next:'',review:''};openStudyDrawer(t.id?'Editar tópico':'Novo tópico',`<input type="hidden" id="stId" value="${escapeHTML(t.id)}"><label>Área *</label><select id="stArea">${studies.areas.map(a=>`<option value="${escapeHTML(a.id)}" ${t.areaId===a.id?'selected':''}>${escapeHTML(a.name)}</option>`).join('')}</select><label>Nome do tópico *</label><input id="stTitle" value="${escapeHTML(t.title)}" placeholder="Ex.: Matéria orgânica do solo"><label>Descrição</label><textarea id="stDesc" rows="3">${escapeHTML(t.desc)}</textarea><label>Status</label><select id="stStatus">${studyStatuses.map(x=>`<option ${x===t.status?'selected':''}>${x}</option>`).join('')}</select><label>Próxima ação de estudo</label><textarea id="stNext" rows="2" placeholder="Ex.: Ler o capítulo 3">${escapeHTML(t.next)}</textarea><label>Data da próxima revisão (opcional)</label><input type="date" id="stReview" value="${escapeHTML(t.review||'')}">${studyActions('topic',t.id)}`);}
+function openStudyMaterial(id='',parent=''){if(!studies.topics.length){alert('Crie um tópico de estudo primeiro.');return;}const m=studies.materials.find(x=>x.id===id)||{id:'',topicId:parent||studies.topics[0].id,title:'',type:'PDF',url:'',status:'Não iniciado',notes:''};openStudyDrawer(m.id?'Editar material':'Novo material',`<input type="hidden" id="stId" value="${escapeHTML(m.id)}"><label>Tópico *</label><select id="stTopic">${studies.topics.map(x=>`<option value="${escapeHTML(x.id)}" ${x.id===m.topicId?'selected':''}>${escapeHTML(x.title)}</option>`).join('')}</select><label>Título do material *</label><input id="stTitle" value="${escapeHTML(m.title)}" placeholder="Nome do artigo, livro ou capítulo"><label>Tipo de material</label><select id="stType">${['PDF','Artigo','Livro','Capítulo','Vídeo','Outro'].map(x=>`<option ${x===m.type?'selected':''}>${x}</option>`).join('')}</select><label>Link HTTPS do Google Drive (opcional)</label><input type="url" id="stUrl" value="${escapeHTML(m.url)}" placeholder="https://drive.google.com/..."><button type="button" class="light drive-open-btn" onclick="openDrivePicker()">▣ Escolher arquivo no Google Drive</button><p class="note">Apenas o link será preenchido. Nenhum arquivo será copiado ou modificado.</p><label>Status do estudo</label><select id="stStatus">${studyStatuses.map(x=>`<option ${x===m.status?'selected':''}>${x}</option>`).join('')}</select><label>Observações e resumo do material</label><textarea id="stNotes" rows="5">${escapeHTML(m.notes)}</textarea>${studyActions('material',m.id)}${m.id?`<div class="section"><h3>Histórico de leitura (opcional)</h3><p class="note">Este registro é independente. Para alterar o link ou o título do material, use o botão Salvar acima.</p><label>Onde parei (página/capítulo)</label><input id="rdPosition" placeholder="Ex.: página 52"><label>Observação breve</label><textarea id="rdNote" rows="2" placeholder="O que registrei nesta leitura"></textarea><label>Próxima leitura</label><input id="rdNext" placeholder="Ex.: continuar na página 53"><button type="button" class="light" onclick="saveReadingUI('${m.id}')">Registrar leitura</button><div id="readingHistory" class="reading-history">Carregando...</div></div>`:''}`);if(m.id)loadReadingUI(m.id);}
+function studyRun(fn,p){const btn=document.getElementById('studySaveBtn');if(btn)btn.disabled=true;google.script.run.withSuccessHandler(()=>{closeStudyDrawer();loadStudies();}).withFailureHandler(e=>{if(btn)btn.disabled=false;alert('Erro ao salvar estudo: '+(e.message||e));})[fn](p);}
+function saveStudyUI(type){const g=id=>document.getElementById(id)?.value||'',id=g('stId');let name='',p;
+ if(type==='area'){p={id,name:g('stName'),desc:g('stDesc')};name='saveStudyArea';}
+ else if(type==='topic'){p={id,areaId:g('stArea'),title:g('stTitle'),desc:g('stDesc'),status:g('stStatus'),next:g('stNext'),review:g('stReview')};name='saveStudyTopic';}
+ else{p={id,topicId:g('stTopic'),title:g('stTitle'),type:g('stType'),url:g('stUrl'),status:g('stStatus'),notes:g('stNotes')};name='saveStudyMaterial';}
+ if(!(p.name||p.title||'').trim()){alert('Informe o nome ou título.');return;}studyRun(name,p);}
+function updateMaterialStatus(id,status){google.script.run.withSuccessHandler(()=>loadStudies()).withFailureHandler(e=>{alert('Não foi possível atualizar o material: '+(e.message||e));loadStudies();}).setStudyMaterialStatus(id,status);}
+function archiveStudyUI(type,id){if(!confirm('Arquivar este registro de estudo? Os materiais relacionados precisam ser arquivados antes.'))return;google.script.run.withSuccessHandler(()=>{closeStudyDrawer();loadStudies()}).withFailureHandler(e=>alert(e.message||e)).archiveStudyEntity(type,id);}
+
+
+/* V7: Revisão semanal. Segunda-feira como início; apenas sugestões, sem ações automáticas. */
+function weekMonday_(dateISO){const d=new Date(dateISO+'T12:00:00'),shift=(d.getDay()+6)%7;return localISO(new Date(d.getFullYear(),d.getMonth(),d.getDate()-shift));}
+function daysAfter_(dateISO,n){const d=new Date(dateISO+'T12:00:00');d.setDate(d.getDate()+n);return localISO(d);}
+function renderWeeklyReview(){
+ const box=document.getElementById('weeklyReviewContent');if(!box)return;
+ const monday=weekMonday_(todayISO()),prevStart=daysAfter_(monday,-7),prevEnd=daysAfter_(monday,-1),nextStart=daysAfter_(monday,7),nextEnd=daysAfter_(monday,13);
+ const real=tasks.filter(t=>!t.template&&t.status!=='Cancelado');
+ const completed=real.filter(t=>t.status==='Concluído'&&t.done>=prevStart&&t.done<=prevEnd);
+ const overdue=real.filter(over),waiting=real.filter(t=>!t.archived&&t.status==='Aguardando');
+ const nextWeek=real.filter(t=>!t.archived&&(t.planned>=nextStart&&t.planned<=nextEnd || (t.agendaStart&&t.agendaStart<=nextEnd&&(t.agendaEnd||t.agendaStart)>=nextStart)));
+ const unplanned=real.filter(t=>active(t)&&!t.planned).slice(0,25);
+ const item=(t,buttonLabel,action)=>`<div class="review-row"><span>${escapeHTML(t.title)}${t.farm?' · '+escapeHTML(t.farm):''}${t.due?' · prazo '+br(t.due):''}</span><button type="button" class="light" onclick="${action}('${t.id}')">${buttonLabel}</button></div>`;
+ const section=(title,arr,renderItem,empty='Nenhum registro.')=>`<section class="weekly-review-section"><h3>${title} (${arr.length})</h3>${arr.slice(0,30).map(renderItem).join('')||`<p class="note">${empty}</p>`}${arr.length>30?'<p class="note">Mostrando os primeiros 30.</p>':''}</section>`;
+ const planNext=t=>item(t,'Planejar', 'reviewPlanNext');
+ box.innerHTML=`<p class="note"><strong>Semana encerrada:</strong> ${br(prevStart)} a ${br(prevEnd)} · <strong>Próxima semana:</strong> ${br(nextStart)} a ${br(nextEnd)}</p>
+ <div class="weekly-review-grid">${[['Concluídas semana passada',completed.length],['Atrasadas agora',overdue.length],['Aguardando',waiting.length],['Previstas próxima semana',nextWeek.length]].map(x=>`<div class="weekly-review-stat"><b>${x[1]}</b><span>${x[0]}</span></div>`).join('')}</div>
+ <div class="weekly-review-sections">${section('Concluídas na semana anterior',completed,t=>item(t,'Abrir','openT'))}
+ ${section('Atrasadas',overdue,t=>item(t,'Reagendar','planCustom'))}
+ ${section('Aguardando retorno',waiting,t=>item(t,'Abrir','openT'))}
+ ${section('Próxima semana',nextWeek,t=>item(t,'Abrir','openT'))}
+ ${section('Pendentes sem planejamento',unplanned,planNext,'Todas as tarefas abertas têm planejamento.')}</div>`;
+}
+function reviewPlanNext(id){const monday=weekMonday_(todayISO()),next=daysAfter_(monday,7);const date=prompt('Planejar esta atividade para (AAAA-MM-DD):',next);if(date!==null)planDate(id,date.trim());}
+
+/* V7: registro de leitura opcional para cada material, sem análise da aprendizagem. */
+function loadReadingUI(materialId){
+ const target=document.getElementById('readingHistory');if(!target)return;
+ google.script.run.withSuccessHandler(items=>{
+  const target=document.getElementById('readingHistory');if(!target||document.getElementById('stId')?.value!==materialId)return;
+  target.innerHTML=items.length?items.map(x=>`<div class="reading-entry"><strong>${escapeHTML(x.date)}</strong>${x.position?'<div>Onde parei: '+escapeHTML(x.position)+'</div>':''}${x.note?'<div>Observação: '+escapeHTML(x.note)+'</div>':''}${x.next?'<div>Próxima leitura: '+escapeHTML(x.next)+'</div>':''}</div>`).join(''):'<p class="note">Nenhuma leitura registrada.</p>';
+ }).withFailureHandler(e=>{const t=document.getElementById('readingHistory');if(t)t.textContent='Não foi possível carregar o histórico: '+(e.message||e)}).getReadingEntries(materialId);
+}
+function saveReadingUI(materialId){
+ const p={materialId,position:document.getElementById('rdPosition')?.value||'',note:document.getElementById('rdNote')?.value||'',next:document.getElementById('rdNext')?.value||''};
+ if(!p.position.trim()&&!p.note.trim()&&!p.next.trim()){alert('Preencha ao menos um campo da leitura.');return;}
+ const btn=document.querySelector('[onclick^="saveReadingUI"]');if(btn)btn.disabled=true;
+ google.script.run.withSuccessHandler(()=>{
+  ['rdPosition','rdNote','rdNext'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});if(btn)btn.disabled=false;loadReadingUI(materialId);
+ }).withFailureHandler(e=>{if(btn)btn.disabled=false;alert('Não foi possível registrar a leitura: '+(e.message||e))}).saveReadingEntry(p);
+}
+
+/* V8: Explorer read-only; shortcuts to folders are navigable.
+   Breadcrumb history follows the shortcut path, never the target folder's unrelated parents. */
+let driveRequest=0,driveHistory=[];
+function openDrivePicker(){
+ if(!document.getElementById('stUrl'))return;
+ document.getElementById('drivePickerBackdrop').classList.add('open');
+ document.getElementById('drivePickerModal').classList.add('open');
+ document.getElementById('driveQuery').value='';driveHistory=[];
+ browseDrivePicker('root','',false);
+}
+function resetDrivePickerToRoot(){driveHistory=[];browseDrivePicker('root','',false);}
+function closeDrivePicker(){
+ driveRequest++;
+ document.getElementById('drivePickerBackdrop').classList.remove('open');
+ document.getElementById('drivePickerModal').classList.remove('open');
+}
+function renderDriveResults(el,folders,files,more){
+ folders=(folders||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+ files=(files||[]).slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+ el.innerHTML=folders.map((f,i)=>`<button class="drive-item" type="button" data-drive-folder="${i}"><span class="drive-kind">${f.isShortcut?'📁↗':'📁'}</span><span class="drive-label">${escapeHTML(f.name)}</span><span>›</span></button>`).join('')+
+  files.map((f,i)=>`<button class="drive-item" type="button" data-drive-file="${i}"><span class="drive-kind">${f.isShortcut?'📄↗':'📄'}</span><span class="drive-label">${escapeHTML(f.name)}</span><span>Selecionar</span></button>`).join('')+
+  (more?'<p class="note" style="padding:10px">Há mais resultados. Refine a busca pelo nome.</p>':'')+
+  (!folders.length&&!files.length?'<p class="note" style="padding:10px">Nenhum item encontrado.</p>':'');
+ el.querySelectorAll('[data-drive-folder]').forEach(b=>{
+  b.addEventListener('click',()=>{
+   const f=folders[Number(b.dataset.driveFolder)];
+   if(f)browseDrivePicker(f.id,f.resourceKey||'',true);
+  });
+ });
+ el.querySelectorAll('[data-drive-file]').forEach(b=>{
+  b.addEventListener('click',()=>{
+   const f=files[Number(b.dataset.driveFile)];
+   if(f)selectDriveFile(f.url);
+  });
+ });
+}
+function browseDrivePicker(folderId,resourceKey='',pushHistory=true){
+ const request=++driveRequest,el=document.getElementById('driveResults');
+ el.textContent='Carregando pastas e arquivos...';
+ google.script.run.withSuccessHandler(data=>{
+  if(request!==driveRequest)return;
+  if(pushHistory||!driveHistory.length)driveHistory.push({folderId:data.folderId,resourceKey:data.resourceKey||''});
+  document.getElementById('driveFolderName').textContent=data.name;
+  document.getElementById('driveBack').disabled=driveHistory.length<=1;
+  renderDriveResults(el,data.folders,data.files,data.more);
+ }).withFailureHandler(e=>{
+  if(request===driveRequest)el.textContent='Não foi possível abrir esta pasta. Verifique o acesso ao destino do atalho: '+(e.message||e);
+ }).browseDriveFiles(folderId,resourceKey);
+}
+function goDriveParent(){
+ if(driveHistory.length<=1)return;
+ const old=driveHistory.pop(),parent=driveHistory[driveHistory.length-1];
+ // Roll back the history on request failure so the user can try again.
+ const request=++driveRequest,el=document.getElementById('driveResults');
+ el.textContent='Voltando à pasta anterior...';
+ google.script.run.withSuccessHandler(data=>{
+  if(request!==driveRequest)return;
+  document.getElementById('driveFolderName').textContent=data.name;
+  document.getElementById('driveBack').disabled=driveHistory.length<=1;
+  renderDriveResults(el,data.folders,data.files,data.more);
+ }).withFailureHandler(e=>{
+  if(request===driveRequest){driveHistory.push(old);el.textContent='Não foi possível voltar: '+(e.message||e);}
+ }).browseDriveFiles(parent.folderId,parent.resourceKey);
+}
+function searchDrivePicker(){
+ const q=document.getElementById('driveQuery').value.trim(),el=document.getElementById('driveResults');
+ if(q.length<2){alert('Digite pelo menos dois caracteres para pesquisar.');return;}
+ const request=++driveRequest;el.textContent='Pesquisando no Google Drive...';
+ google.script.run.withSuccessHandler(data=>{
+  if(request!==driveRequest)return;
+  renderDriveResults(el,data.folders,data.files,data.more);
+ }).withFailureHandler(e=>{
+  if(request===driveRequest)el.textContent='Erro na pesquisa: '+(e.message||e);
+ }).searchDriveFiles(q);
+}
+function selectDriveFile(url){
+ if(!/^https:\/\//i.test(url)){alert('Link do arquivo inválido.');return;}
+ const target=document.getElementById('stUrl');if(!target){closeDrivePicker();return;}
+ target.value=url;target.dispatchEvent(new Event('input',{bubbles:true}));closeDrivePicker();
+}
+
+/* V7: avisar sobre conflito sem impedir o cadastro. */
+let conflictCheckSeq=0;
+function conflictPayloadUI(){
+ return {id:current?.id||'',agendaStart:document.getElementById('eAgendaStart')?.value||'',agendaEnd:document.getElementById('eAgendaEnd')?.value||'',agendaStartTime:document.getElementById('eAgendaStartTime')?.value||'',agendaEndTime:document.getElementById('eAgendaEndTime')?.value||'',agendaAllDay:document.getElementById('eAllDay')?.checked!==false,sync:document.getElementById('eSync')?.checked||false};
+}
+function showAgendaConflicts(){
+ const el=document.getElementById('agendaConflicts');if(!el)return;
+ const p=conflictPayloadUI(),n=++conflictCheckSeq;
+ if(!p.agendaStart){el.innerHTML='';return;}
+ if(p.agendaEnd&&p.agendaEnd<p.agendaStart){el.textContent='Data de término anterior à data de início.';return;}
+ el.textContent='Conferindo outros compromissos...';
+ google.script.run.withSuccessHandler(items=>{if(n!==conflictCheckSeq||!document.getElementById('agendaConflicts'))return;
+  el.innerHTML=items.length?`<div class="over" role="status">⚠ ${items.length} compromisso(s) coincidente(s):</div><ul>${items.map(t=>`<li>${escapeHTML(t.title)} · ${br(t.from)}${t.to!==t.from?' a '+br(t.to):''}</li>`).join('')}</ul><p class="note">Aviso apenas. O agendamento pode ser salvo.</p>`:'<span class="sync">✓ Nenhum conflito encontrado entre os compromissos cadastrados.</span>';
+ }).withFailureHandler(e=>{if(n===conflictCheckSeq)el.textContent='Não foi possível conferir conflitos: '+(e.message||e)}).checkAgendaConflicts(p);
+}
+
+initDensity();initSortMode();loadData();loadStudies();
+</script></body></html>
