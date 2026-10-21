@@ -1,0 +1,10 @@
+TESTE DE LEITURA OFFLINE — não substitui o Kanban completo.
+
+Envie kanban_leitura_offline.html e sw.js para a RAIZ do repositório atividades-kaban no GitHub. O sw.js substitui a versão do protótipo (preserva os arquivos anteriores e adiciona cache desta página).
+
+Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_leitura_offline.html
+Com internet, clique Autorizar Google e Atualizar dados da cópia. Depois desligue a internet, recarregue a página e confira os cartões.
+
+Não envie o banco de dados em arquivos para o repositório. A cópia é consultada via API OAuth. Não há edição nem escrita nesta etapa.
+
+Observação: qualquer pessoa pode carregar a interface pública, mas a API só permite ler a planilha com uma conta autorizada. Os dados baixados ficam no armazenamento local do navegador, que deve ser protegido.
