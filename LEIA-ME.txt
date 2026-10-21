@@ -1,10 +1,11 @@
-V9 PLANILHA OFICIAL — PRIMEIRO ACESSO SEGURO
+VERSÃO OFICIAL v2 — CORREÇÃO PLANEJAR AGENDA
 
-1. Faça cópia/backup da planilha oficial e backup JSON da versão de testes.
-2. Envie kanban_v9_oficial_v1.html e sw_v9_oficial_v1.js à raiz do repositório GitHub Pages.
-3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_oficial_v1.html com internet.
-4. Autorize Google, clique Carregar dados oficiais, confirme contagem e faça a confirmação de habilitar edição.
-5. Confira a lista, crie UMA atividade fictícia e sincronize. Confira no Sheets oficial e exclua somente depois.
-6. Cada dispositivo precisa autorizar e carregar seus próprios dados oficiais. Não use a versão de testes para gravar na planilha oficial.
+Ao clicar Planejar Agenda, a caixa Sincronizar Google Calendar agora inicia DESMARCADA. O compromisso é salvo na planilha oficial por meio da fila de sincronização do Sheets. Nenhum evento é criado no Google Calendar.
 
-IMPORTANTE: a primeira leitura não grava na planilha. Os dados locais oficiais usam chave separada. A interface ainda não suporta todas as funções online da V9. Sincronização manual, sem resolução de conflitos simultâneos. Não edite a mesma atividade em dois dispositivos antes de sincronizar.
+1. Faça backup JSON e backup da planilha oficial.
+2. Envie kanban_v9_oficial_v2.html e sw_v9_oficial_v2.js para raiz do repositório GitHub Pages.
+3. Acesse https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_oficial_v2.html
+4. Autorize Google, carregue os dados oficiais e teste com compromisso fictício.
+5. Confira a planilha Tarefas após Sincronizar agora.
+
+ATENÇÃO: esta alteração não implementa Google Calendar. Para compromissos existentes já sincronizados com Calendar, mantenha o aplicativo original para edições até integrar o Calendar.
