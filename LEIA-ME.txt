@@ -1,12 +1,10 @@
-ATIVIDADES KANBAN V9 — CORREÇÃO DE CAMPOS E LIXEIRA
+VERSAO V9 OFFLINE v3 — CORRECAO DA BARRA E LIXEIRA
 
-1. Antes de substituir arquivos, clique em Backup JSON na versão atual.
-2. No repositório atividades-kaban, substitua kanban_v9_edicao_offline_teste.html.
-3. Adicione sw_v9_edicao_v2.js na mesma pasta (raiz).
-4. Commit. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_edicao_offline_teste.html
-5. Recarregue com internet uma vez, preferencialmente Ctrl+F5.
-6. Teste a edição e o botão Enviar à lixeira, depois o menu Lixeira > Restaurar.
-7. Autorize Google e sincronize. Confira a coluna Excluido na aba Tarefas da CÓPIA de testes.
+1. Faça Backup JSON na versão que já funciona.
+2. Envie os dois arquivos HTML e JS deste ZIP para a raiz do repositório GitHub.
+3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_edicao_offline_v3.html
+4. Confirme que aparece V9 • TESTE OFFLINE v3, que a barra fica imediatamente abaixo do cabeçalho e que a Lixeira mostra Restaurar e Excluir definitivamente.
+5. Teste exclusão permanente apenas com tarefa fictícia, na planilha de testes.
+6. NÃO apague o HTML antigo nem o backup; NÃO use a planilha principal.
 
-O aplicativo compartilha os mesmos dados IndexedDB da versão anterior. Não apague dados do navegador.
-Somente a planilha de testes está configurada para escrita. O Calendar e Estudos continuam sem sincronização offline.
+ATENÇÃO: excluir definitivamente é irreversível após sincronizar e remove dados da atividade e das etapas na cópia de testes.
