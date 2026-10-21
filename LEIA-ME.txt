@@ -1,12 +1,13 @@
-KANBAN V9 OFICIAL V4 - CALENDAR OPCIONAL
+V9 OFICIAL v5 — Correções dos campos
 
-1. Faça backup da planilha oficial e exporte o Backup JSON antes de instalar.
-2. No Google Cloud, ative Google Calendar API no projeto OAuth.
-3. Em OAuth consent screen, adicione o escopo calendar.events se necessário e mantenha seu email como usuário de teste.
-4. Envie os dois arquivos HTML e JS ao GitHub.
-5. Abra kanban_v9_oficial_v4.html, autorize Google novamente e confirme os dados oficiais.
-6. Teste com UM compromisso fictício e marque a sincronização com Calendar. Salve localmente e clique Sincronizar agora. Confira planilha Tarefas e Google Calendar.
-7. Teste edição do mesmo compromisso; deve atualizar o evento existente.
-8. Desmarcar sincronização de compromisso com evento vinculado solicitará confirmação e removerá o evento ao sincronizar.
+1. Faça backup JSON e da planilha oficial.
+2. Envie kanban_v9_oficial_v5.html e sw_v9_oficial_v5.js para a raiz do repositório GitHub.
+3. Abra https://hunhoff97-web.github.io/atividades-kaban/kanban_v9_oficial_v5.html
+4. Confirme os campos Status, Tipo de compromisso e Tópico de estudo.
+5. Não é necessário alterar a planilha. As correções normalizam apenas a interface até que uma atividade seja salva.
 
-IMPORTANTE: operação não testada com credenciais reais. Se a Calendar API retornar erro, a fila de calendário permanece pendente. Não repita criação até verificar o calendário.
+Status: A fazer, Em andamento, Aguardando, Concluído.
+Tipo de compromisso: Não definido, Visita técnica, Reunião, Deslocamento, Apresentação, Outro.
+Tópico de estudo: Sem vínculo (tópicos reais só aparecem quando o módulo Estudos estiver carregado).
+
+Atenção: manter arquivos anteriores como backup.
