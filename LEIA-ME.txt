@@ -1,19 +1,60 @@
-ATIVIDADES KANBAN — VERSÃO ÚNICA (OPÇÃO A)
+ATIVIDADES KANBAN — V9.1 (versão única oficial)
 
-ARQUIVOS: index.html e sw.js.
+ARQUIVOS DESTA VERSÃO
+- index.html (alterado)
+- sw.js (alterado)
+- manifest.webmanifest (alterado)
+- icon-180.png, icon-192.png, icon-512.png, icon-maskable-512.png (novos)
+- icon.svg (sem mudança)
+- app.js: NÃO apagar ainda. É da versão offline antiga e não é usado. A V9.1 avisa
+  se algum aparelho ainda tiver atividades salvas por ele.
 
-IMPORTANTE: Antes de publicar, exporte Backup JSON no aplicativo e faça uma cópia da planilha oficial.
+ANTES DE PUBLICAR
+1. No app atual, sincronize todas as pendências até o contador ficar em 0.
+2. Clique em Backup JSON e guarde o arquivo.
+3. Faça uma cópia da planilha oficial (Arquivo > Fazer uma cópia).
 
-1. Faça upload de index.html e sw.js na RAIZ do repositório atividades-kaban.
-2. GitHub Settings > Pages: confira publicação da branch principal / (root).
-3. Abra https://hunhoff97-web.github.io/atividades-kaban/
-4. Caso a raiz ainda use uma versão antiga, atualize a página com Ctrl+Shift+R e verifique o Service Worker no navegador.
-5. Autorize Google com o botão. O token NÃO é salvo permanentemente; o Google pode pedir interação após expiração.
-6. Carregue dados oficiais somente depois de fazer backup; confirme habilitação de edição.
-7. A opção 'Sincronizar pendências após autorizar' é opt-in; somente funciona após habilitação explícita da edição neste dispositivo.
-8. Confirme que Estudos e Calendar continuam funcionando antes de remover arquivos antigos do repositório.
+PUBLICAR
+1. No GitHub, abra o repositório atividades-kaban > Add file > Upload files.
+2. Arraste os arquivos listados acima para a raiz e confirme (Commit changes).
+3. Aguarde 1 a 2 minutos e abra https://hunhoff97-web.github.io/atividades-kaban/
+4. Se aparecer a versão antiga, feche todas as abas do app e abra de novo.
+   No computador, Ctrl+Shift+R também força a atualização.
 
-NOTAS: Mantida a mesma chave de cache IndexedDB da versão oficial anterior para conservar dados locais.
-Não altere o ID da planilha oficial.
-A sincronização de Estudos continua SOMENTE LEITURA, como na V7.
-O modo de publicação OAuth deve ser verificado no Google Cloud.
+PRIMEIRO USO EM CADA APARELHO
+1. Autorizar Google.
+2. Carregar dados oficiais > confirmar. A edição fica habilitada NESTE aparelho
+   e continua habilitada nas próximas aberturas, inclusive sem internet.
+3. Celular: instale pelo menu do navegador (Android: Instalar app; iPhone, no Safari:
+   Compartilhar > Adicionar à Tela de Início). No iPhone isso evita que o Safari apague
+   os dados locais após dias sem uso.
+
+O QUE MUDOU
+- Edição feita durante a sincronização não se perde mais.
+- Só uma aba edita por vez; as outras ficam em leitura e assumem quando a primeira fecha.
+- Edição liberada fica gravada no aparelho; funciona offline após reabrir.
+- Atividades novas vão para a planilha por "append": dois aparelhos não disputam a mesma linha.
+- Repetição automática quando o Google responde "muitas requisições" ou falha temporária.
+- Concluir pelo quadradinho grava a data de conclusão (aparece no Resumo anual e na Revisão).
+- Duplicar, Criar modelo e Arquivar/Restaurar funcionam.
+- Verificação de conflitos de agenda é real (antes sempre dizia "nenhum conflito").
+- Fila do Calendar: um evento com erro não trava os demais; o erro aparece na barra.
+- Enviar à lixeira remove o evento do Calendar; restaurar recria.
+- Status "Cancelado" não é mais trocado para "A fazer" ao editar.
+- Autorização Google dura a sessão (cerca de 1 hora) mesmo recarregando a página.
+  Quando expira, clicar em Sincronizar já pede a renovação e continua o envio.
+- PWA instalável: manifesto ligado, ícones PNG, ícone no iPhone.
+- Abertura com sinal fraco usa a cópia salva após 4 segundos.
+- Links de materiais só abrem se forem https; proteção contra código na planilha.
+- Funções ainda não disponíveis foram ocultadas ou sinalizadas (histórico de observações,
+  resumo por e-mail, edição de Estudos). Recorrência é salva, mas ainda não gera repetições.
+
+AINDA NÃO RESOLVIDO (próxima etapa, V10)
+- Edição do MESMO registro em dois aparelhos antes de sincronizar: vence quem sincroniza por
+  último. Até a V10, sincronize antes de trocar de aparelho.
+- Receber no aparelho as mudanças feitas em outro exige "Carregar dados oficiais" com a fila vazia.
+
+NOTAS
+- Mesma chave de IndexedDB das versões anteriores: os dados locais são preservados.
+- Não altere o ID da planilha oficial. Nenhuma coluna nova foi exigida na planilha.
+- O token do Google fica só na memória e na sessão da aba; nunca senha ou refresh token.
