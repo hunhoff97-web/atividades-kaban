@@ -1,5 +1,5 @@
 // Troque o sufixo a cada publicação para invalidar o cache anterior.
-const CACHE='kanban-oficial-unificado-20261028-v92-rascunho';
+const CACHE='kanban-oficial-unificado-20261028-v93-atualizacao';
 const SCOPE=new URL(self.registration.scope);
 const HOME=new URL('./index.html',SCOPE).toString();
 const ASSETS=['./index.html','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png','./icon-maskable-512.png'].map(p=>new URL(p,SCOPE).toString());
@@ -14,7 +14,8 @@ function networkFirst(request,cacheKey){
     const fallback=()=>caches.match(cacheKey).then(r=>r||caches.match(request)).then(r=>r||new Response('Offline e sem cópia em cache.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}}));
     // Só desiste da rede se houver cópia em cache; sem cópia, continua esperando a rede.
     const timer=setTimeout(()=>{caches.match(cacheKey).then(r=>{if(r&&!settled){settled=true;resolve(r)}})},NETWORK_TIMEOUT_MS);
-    fetch(request).then(r=>{
+    // no-cache: sempre confere com o GitHub Pages se há versão nova (ignora o cache de 10 min do navegador).
+    fetch(request,{cache:'no-cache'}).then(r=>{
       if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(cacheKey,copy))}
       if(!settled){settled=true;clearTimeout(timer);resolve(r)}
     }).catch(()=>{if(!settled){clearTimeout(timer);fallback().then(r=>{settled=true;resolve(r)})}});
