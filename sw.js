@@ -1,5 +1,5 @@
 // Troque o sufixo a cada publicação para invalidar o cache anterior.
-const CACHE='kanban-oficial-unificado-20261029-v91';
+const CACHE='kanban-oficial-unificado-20261028-v92-rascunho';
 const SCOPE=new URL(self.registration.scope);
 const HOME=new URL('./index.html',SCOPE).toString();
 const ASSETS=['./index.html','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png','./icon-maskable-512.png'].map(p=>new URL(p,SCOPE).toString());
