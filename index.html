@@ -154,12 +154,12 @@ main{margin-left:210px;max-width:none}
 .drawer .actions{display:flex;flex-wrap:wrap;gap:8px;position:sticky;bottom:-36px;background:#f9faf7;border-top:1px solid #d4d9d1;padding:12px 0;z-index:2}
 .drawer .actions button{white-space:normal}
 .drawer .section{min-width:0}
-.danger{background:#fce7e7;color:#922b2b}.sub-buttons{display:flex;gap:5px;flex-wrap:wrap;flex:none}.sub-buttons button{padding:5px 8px;font-size:12px}.sub-desc{font-size:12px;color:#53665c;margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}.sub-editing{background:#eef3ec;border-radius:9px;padding:10px 8px}.sub-form{background:#fff;border:1px solid #d4d9d1;border-radius:9px;padding:10px 12px;margin-top:9px}.sub-form-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.draft-note{background:#f6e7d4;border-left:4px solid #bd7423;padding:8px 10px;border-radius:6px;color:#5c3a10}
+.danger{background:#fce7e7;color:#922b2b}#offlineConflicts{background:#fde2c4!important;color:#7a3d00!important;font-weight:700}.conflict-modal{position:fixed;inset:0;background:#0f172a9e;z-index:60;display:flex;align-items:center;justify-content:center;padding:12px}.conflict-panel{background:#f9faf7;border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow:auto;padding:18px;box-shadow:0 15px 60px #0004}.conflict-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.conflict-item{background:#fff;border:1px solid #d4d9d1;border-radius:10px;padding:11px;margin:10px 0}.conflict-title{font-weight:700;color:#072f38;margin-bottom:6px;overflow-wrap:anywhere}.conflict-val{font-size:13px;margin:3px 0;white-space:pre-wrap;overflow-wrap:anywhere}.conflict-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.sub-buttons{display:flex;gap:5px;flex-wrap:wrap;flex:none}.sub-buttons button{padding:5px 8px;font-size:12px}.sub-desc{font-size:12px;color:#53665c;margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}.sub-editing{background:#eef3ec;border-radius:9px;padding:10px 8px}.sub-form{background:#fff;border:1px solid #d4d9d1;border-radius:9px;padding:10px 12px;margin-top:9px}.sub-form-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.draft-note{background:#f6e7d4;border-left:4px solid #bd7423;padding:8px 10px;border-radius:6px;color:#5c3a10}
 .trash-item{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0;padding:13px;background:white;border:1px solid #d4d9d1;border-radius:10px}
 .trash-item>div{min-width:0;overflow-wrap:anywhere}
 @media(max-width:680px){.drawer{width:100vw;right:-105vw;padding:16px 14px 28px}.drawer .row{grid-template-columns:minmax(0,1fr)}.drawer .actions{bottom:-28px}}
 </style></head><body>
-<header><div class="brand">Atividades Kanban</div><div class="header-actions"><button class="new-activity" onclick="newTask()">＋ Nova atividade</button><button class="plan-agenda" onclick="newAppointment()">▣ Planejar Agenda</button></div></header><div id="offlineV9bar"><b>ATIVIDADES KANBAN • OFICIAL</b><span id="offlineV9status">Carregando cópia local…</span><button id="offlineAuth" type="button">Autorizar Google</button><button id="offlineLoadOfficial" type="button">Carregar dados oficiais</button><button id="offlineSync" type="button">Sincronizar agora</button><button id="offlineBackup" type="button">Backup JSON</button><label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap"><input id="offlineAutoSync" type="checkbox" style="width:auto"/> Sincronizar pendências após autorizar</label></div><script>
+<header><div class="brand">Atividades Kanban</div><div class="header-actions"><button class="new-activity" onclick="newTask()">＋ Nova atividade</button><button class="plan-agenda" onclick="newAppointment()">▣ Planejar Agenda</button></div></header><div id="offlineV9bar"><b>ATIVIDADES KANBAN • OFICIAL</b><span id="offlineV9status">Carregando cópia local…</span><button id="offlineAuth" type="button">Autorizar Google</button><button id="offlineLoadOfficial" type="button">Carregar dados oficiais</button><button id="offlineSync" type="button">Sincronizar agora</button><button id="offlineConflicts" type="button" hidden>⚠ conflitos</button><button id="offlineBackup" type="button">Backup JSON</button><label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap"><input id="offlineAutoSync" type="checkbox" style="width:auto"/> Sincronizar pendências após autorizar</label></div><script>
 (function(){
   function alignOfflineSidebar(){
     const header=document.querySelector('body > header');
@@ -224,14 +224,14 @@ const TZ='America/Cuiaba';
 const TOKEN_KEY='kanban-oficial-token-v1';
 const LOCK_NAME='kanban-oficial-editor-v1';
 let token='',expires=0,oauthClient=null,syncBusy=false,officialLoaded=false,officialUnlocked=false,isWriter=true,afterAuth=null;
-let local={tasks:[],queue:[],calendarQueue:[],lastSync:'',editUnlocked:false};
+let local={tasks:[],queue:[],calendarQueue:[],lastSync:'',editUnlocked:false,conflicts:[]};
 const channel=typeof BroadcastChannel!=='undefined'?new BroadcastChannel('kanban-oficial-v1'):null;
 const byId=id=>document.getElementById(id);
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const pendingCount=()=>local.queue.length+(local.calendarQueue||[]).length;
 const tokenValid=()=>!!token&&Date.now()<expires;
 const calendarFailures=()=>(local.calendarQueue||[]).filter(q=>q.error).length;
-const notify=message=>{const extra=[];if(!isWriter)extra.push('somente leitura: o app está aberto em outra aba');const f=calendarFailures();if(f)extra.push(f+' falha(s) no Calendar');if(local.lastSync)extra.push('último sync '+local.lastSync);byId('offlineV9status').textContent=message+' • '+pendingCount()+' pendente(s)'+(extra.length?' • '+extra.join(' • '):'');byId('offlineSync').disabled=!isWriter||!officialUnlocked||!pendingCount();byId('offlineAuth').textContent=tokenValid()?'Google autorizado ✓':'Autorizar Google'};
+const notify=message=>{const extra=[];const nc=(local.conflicts||[]).length;const cb=byId('offlineConflicts');if(cb){cb.hidden=!nc;cb.textContent='⚠ '+nc+' conflito(s)'}if(!isWriter)extra.push('somente leitura: o app está aberto em outra aba');const f=calendarFailures();if(f)extra.push(f+' falha(s) no Calendar');if(local.lastSync)extra.push('último sync '+local.lastSync);byId('offlineV9status').textContent=message+' • '+pendingCount()+' pendente(s)'+(extra.length?' • '+extra.join(' • '):'');byId('offlineSync').disabled=!isWriter||!officialUnlocked;byId('offlineAuth').textContent=tokenValid()?'Google autorizado ✓':'Autorizar Google'};
 const date=s=>{const m=String(s||'').match(/^(\d\d)\/(\d\d)\/(\d{4})/);return m?m[3]+'-'+m[2]+'-'+m[1]:String(s||'').slice(0,10)};
 const br=s=>/^\d{4}-\d\d-\d\d$/.test(s||'')?s.slice(8)+'/'+s.slice(5,7)+'/'+s.slice(0,4):'';
 const yes=s=>String(s||'').toLowerCase()==='sim';
@@ -247,7 +247,7 @@ const getLocal=()=>dbAction('readonly','get',['snapshot-oficial-v1']);
 let studiesCache={areas:[],topics:[],materials:[],readings:[],lastSync:''};
 const saveStudiesCache=()=>dbAction('readwrite','put',[studiesCache,'studies-oficial-v7']);
 const getStudiesCache=()=>dbAction('readonly','get',['studies-oficial-v7']);
-function applySnapshot(s){if(!s)return;local={tasks:s.tasks||[],queue:s.queue||[],calendarQueue:s.calendarQueue||[],lastSync:s.lastSync||'',editUnlocked:!!s.editUnlocked};officialLoaded=true;officialUnlocked=local.editUnlocked}
+function applySnapshot(s){if(!s)return;local={tasks:s.tasks||[],queue:s.queue||[],calendarQueue:s.calendarQueue||[],lastSync:s.lastSync||'',editUnlocked:!!s.editUnlocked,conflicts:s.conflicts||[]};officialLoaded=true;officialUnlocked=local.editUnlocked}
 async function reloadFromDB(){applySnapshot(await getLocal());const study=await getStudiesCache();if(study)studiesCache=study}
 function convert(){const arr=local.tasks.filter(t=>!yes(t.Excluido)&&!t._permanentPending).map(t=>({id:t.ID,title:t.Titulo||'',desc:t.Descricao||'',category:t.Categoria||'',project:t.Projeto||'',farm:t.Fazenda||'',urgency:t.Urgencia||'Não definida',priority:t.Prioridade||'Médio',status:t.Status||'A fazer',done:date(t.Data_conclusao),due:date(t.Prazo),planned:date(t.Data_planejada),next:t.Proxima_acao||'',sync:yes(t.Sincronizar_Google_Calendar),archived:yes(t.Arquivado),important:yes(t.Importante),links:t.Links||'',recurrence:t.Recorrencia||'Nenhuma',origin:t.Recorrencia_origem||'',season:t.Safra||'',agendaStart:date(t.Agenda_inicio),agendaEnd:date(t.Agenda_fim),agendaStartTime:t.Agenda_hora_inicio||'',agendaEndTime:t.Agenda_hora_fim||'',agendaAllDay:yes(t.Agenda_dia_inteiro),agendaLocation:t.Agenda_local||'',agendaType:t.Agenda_tipo||'',reminderDays:t.Lembrete_dias||'',calendarEventId:t.Google_Event_ID||'',updated:t.Atualizado_em||'',studyTopicId:t.Estudo_Topico_ID||'',template:yes(t.Modelo),subs:(t.subs||[]).filter(s=>s.Arquivada!=='Sim').map(s=>({id:s.Subtask_ID,title:s.Titulo||'',desc:s.Descricao||'',status:s.Status||'A fazer',start:date(s.Data_inicio),due:date(s.Prazo),planned:date(s.Data_planejada),done:date(s.Data_conclusao),sync:yes(s.Sincronizar_Google_Calendar),reminder:String(s.Lembrete_dias??'').trim(),reminderTime:s.Lembrete_hora||'',eventId:s.Google_Event_ID||''}))}));return {tasks:arr,farms:[],projects:[],settings:{},today:todayTZ()}}
 function mark(t){if(t._permanentPending)throw Error('Atividade marcada para exclusão definitiva');local.queue=local.queue.filter(q=>q.id!==t.ID);local.queue.push({id:t.ID,operation:'upsert',updated:Date.now()})}
@@ -266,12 +266,14 @@ function reconcileSubEvents(x,oldSubs){
  }
  for(const s of oldSubs||[]){if(keep.has(s.Subtask_ID))continue;const key='sub:'+s.Subtask_ID;if(s.Google_Event_ID)enqueueCalendar(key,'delete',s.Google_Event_ID,{kind:'sub',taskId:x.ID,subId:s.Subtask_ID});else dropCalendarOp(key)}
 }
+const DEFAULT_IF_EMPTY={Urgencia:['Não definida'],Prioridade:['Médio','Não definida'],Status:['A fazer'],Recorrencia:['Nenhuma'],Categoria:['Trabalho'],Agenda_hora_inicio:['08:00'],Agenda_hora_fim:['17:00']};
 async function saveTask(t){requireWriter();if(!officialUnlocked)throw Error('Primeiro carregue os dados oficiais e habilite a edição.');if(t.sync&&!t.agendaStart)throw Error('Informe a data do compromisso para sincronizar com o Calendar.');
  // Data de conclusão acompanha o status em qualquer caminho (checkbox, editor, atalhos).
  if(t.status==='Concluído'){if(!t.done)t.done=todayTZ()}else t.done='';
- const id=t.id||uid();let x=local.tasks.find(v=>v.ID===id);const previousSync=x?yes(x.Sincronizar_Google_Calendar):false;const previousEventId=x?.Google_Event_ID||'';if(!x){x={ID:id,Criado_em:stamp(),Arquivado:'Não',Modelo:'Não',subs:[]};local.tasks.push(x)}const mapping={Titulo:t.title,Descricao:t.desc,Categoria:t.category,Projeto:t.project,Fazenda:t.farm,Urgencia:t.urgency,Prioridade:t.priority,Status:t.status,Data_conclusao:br(t.done),Prazo:br(t.due),Data_planejada:br(t.planned),Proxima_acao:t.next,Importante:bool(t.important),Modelo:bool(t.template),Safra:t.season,Links:t.links,Recorrencia:t.recurrence,Estudo_Topico_ID:t.studyTopicId,Agenda_inicio:br(t.agendaStart),Agenda_fim:br(t.agendaEnd),Agenda_hora_inicio:t.agendaStartTime,Agenda_hora_fim:t.agendaEndTime,Agenda_dia_inteiro:bool(t.agendaAllDay),Agenda_local:t.agendaLocation,Agenda_tipo:t.agendaType,Sincronizar_Google_Calendar:bool(t.sync),Atualizado_em:stamp()};for(const [k,v] of Object.entries(mapping))if(v!==undefined)x[k]=v;
- const old=x.subs||[];x.subs=(t.subs||[]).map((s,i)=>{const prior=old.find(a=>a.Subtask_ID===s.id)||{};return {...prior,Subtask_ID:s.id||uid(),Task_ID:id,Titulo:s.title||'',Descricao:s.desc||'',Status:s.status||'A fazer',Data_inicio:br(s.start),Prazo:br(s.due),Data_planejada:br(s.planned),Data_conclusao:br(s.done),Lembrete_dias:s.reminder===undefined?(prior.Lembrete_dias||''):String(s.reminder||''),Lembrete_hora:s.reminder===undefined?(prior.Lembrete_hora||''):(s.reminder!==''?(s.reminderTime||'08:00'):''),Arquivada:'Não',Ordem:String((i+1)*10)}});
- mark(x);if(t.sync||previousSync||previousEventId)enqueueCalendar(id,t.sync?'upsert':'delete',previousEventId);reconcileSubEvents(x,old);await persist();notify('Alteração salva neste dispositivo');return {ok:true,id}}
+ const id=t.id||uid();let x=local.tasks.find(v=>v.ID===id);const isNew=!x;const previousSync=x?yes(x.Sincronizar_Google_Calendar):false;const previousEventId=x?.Google_Event_ID||'';if(!x){x={ID:id,Criado_em:stamp(),Arquivado:'Não',Modelo:'Não',subs:[]};local.tasks.push(x)}const mapping={Titulo:t.title,Descricao:t.desc,Categoria:t.category,Projeto:t.project,Fazenda:t.farm,Urgencia:t.urgency,Prioridade:t.priority,Status:t.status,Data_conclusao:br(t.done),Prazo:br(t.due),Data_planejada:br(t.planned),Proxima_acao:t.next,Importante:bool(t.important),Modelo:bool(t.template),Safra:t.season,Links:t.links,Recorrencia:t.recurrence,Estudo_Topico_ID:t.studyTopicId,Agenda_inicio:br(t.agendaStart),Agenda_fim:br(t.agendaEnd),Agenda_hora_inicio:t.agendaStartTime,Agenda_hora_fim:t.agendaEndTime,Agenda_dia_inteiro:bool(t.agendaAllDay),Agenda_local:t.agendaLocation,Agenda_tipo:t.agendaType,Sincronizar_Google_Calendar:bool(t.sync),Atualizado_em:stamp()};/* Campo vazio na planilha + valor padrão da tela (ex.: Prioridade vazia = "Médio") não conta como alteração. */
+for(const [k,v] of Object.entries(mapping)){if(v===undefined)continue;if(!isNew&&k!=='Atualizado_em'&&String(x[k]??'')===''&&(v==='Não'||(DEFAULT_IF_EMPTY[k]||[]).includes(v)))continue;x[k]=v}
+ const old=x.subs||[];x.subs=(t.subs||[]).map((s,i)=>{const prior=old.find(a=>a.Subtask_ID===s.id)||{};return {...prior,Subtask_ID:s.id||uid(),Task_ID:id,Titulo:s.title||'',Descricao:s.desc||'',Status:prior.Subtask_ID&&!prior.Status&&(s.status||'A fazer')==='A fazer'?'':(s.status||'A fazer'),Data_inicio:br(s.start),Prazo:br(s.due),Data_planejada:br(s.planned),Data_conclusao:br(s.done),Lembrete_dias:s.reminder===undefined?(prior.Lembrete_dias||''):String(s.reminder||''),Lembrete_hora:s.reminder===undefined?(prior.Lembrete_hora||''):(s.reminder!==''?(s.reminderTime||'08:00'):''),Arquivada:'Não',Ordem:String((i+1)*10)}});
+ mark(x);if(t.sync||previousSync||previousEventId)enqueueCalendar(id,t.sync?'upsert':'delete',previousEventId);{const kept=new Set(x.subs.map(v=>v.Subtask_ID));const gone=old.filter(v=>v.Arquivada!=='Sim'&&!kept.has(v.Subtask_ID)).map(v=>v.Subtask_ID);if(gone.length)x._removedSubs=[...new Set([...(x._removedSubs||[]),...gone])]}reconcileSubEvents(x,old);await persist();notify('Alteração salva neste dispositivo');return {ok:true,id}}
 async function mutateTask(id,field,value){const t=convert().tasks.find(x=>x.id===id);if(!t)throw Error('Atividade não encontrada');t[field]=value;return saveTask(t)}
 async function archiveTask(id,archived){requireWriter();if(!officialUnlocked)throw Error('Edição oficial não habilitada');const x=local.tasks.find(t=>t.ID===id);if(!x||x._permanentPending)throw Error('Atividade não encontrada');x.Arquivado=bool(archived);x.Atualizado_em=stamp();mark(x);reconcileSubEvents(x,[]);await persist();notify(archived?'Atividade arquivada':'Atividade restaurada do arquivo');return {ok:true}}
 async function duplicateTask(id,asTemplate){requireWriter();if(!officialUnlocked)throw Error('Edição oficial não habilitada');const src=local.tasks.find(t=>t.ID===id);if(!src||src._permanentPending)throw Error('Atividade não encontrada');const newId=uid(),now=stamp();const copy={};for(const [k,v] of Object.entries(src))if(k!=='subs'&&!k.startsWith('_'))copy[k]=v;Object.assign(copy,{ID:newId,Criado_em:now,Atualizado_em:now,Titulo:asTemplate?(src.Titulo||''):(src.Titulo||'')+' (cópia)',Status:'A fazer',Data_conclusao:'',Modelo:bool(asTemplate),Arquivado:'Não',Excluido:'Não',Google_Event_ID:'',Sincronizar_Google_Calendar:'Não'});copy.subs=(src.subs||[]).filter(s=>s.Arquivada!=='Sim').map(s=>({...s,_evSig:undefined,Subtask_ID:uid(),Task_ID:newId,Status:'A fazer',Data_conclusao:'',Arquivada:'Não',Google_Event_ID:''}));local.tasks.push(copy);mark(copy);reconcileSubEvents(copy,[]);await persist();notify(asTemplate?'Modelo criado':'Atividade duplicada');return {ok:true,id:newId}}
@@ -303,23 +305,92 @@ async function writeRow(name,row,heads,obj){const range="'"+name+"'!A"+row+':'+c
 // Evita que dois aparelhos calculem a mesma linha. Sem nova tentativa automática para não duplicar.
 async function appendRow(name,heads,obj){const range="'"+name+"'!A1:"+col(heads.length);const d=await request('POST','/values/'+encodeURIComponent(range)+':append?valueInputOption=RAW&insertDataOption=OVERWRITE',{majorDimension:'ROWS',values:[rowValues(heads,obj)]},{noRetry:true});const m=String(d.updates?.updatedRange||'').match(/![A-Z]+(\d+)/);if(!m)throw Error('Google Sheets não informou a linha gravada em '+name);return Number(m[1])}
 const doneOp=op=>{local.queue=local.queue.filter(q=>!(q.id===op.id&&q.updated===op.updated))};
+/* V10: sincronização entre aparelhos.
+   Cada atividade guarda a "base" (como estava na planilha na última leitura). Ao enviar, compara campo a campo:
+   só aqui mudou -> vale este aparelho; só na planilha mudou -> vale a planilha; os dois mudaram com valores
+   diferentes -> grava o deste aparelho e registra um conflito, com o valor do outro aparelho, para você decidir.
+   Etapas criadas no outro aparelho nunca são arquivadas; só as removidas aqui. Depois do envio, as atividades
+   sem pendência são atualizadas com o que está na planilha. */
+const NOCONFLICT=new Set(['Atualizado_em','Criado_em','Google_Event_ID','Ordem','Task_ID','ID','Subtask_ID']);
+const clean=o=>Object.fromEntries(Object.entries(o||{}).filter(([k])=>k!=='subs'&&!k.startsWith('_')).map(([k,v])=>[k,String(v??'')]));
+function snapshotOf(t){return {row:clean(t),subs:Object.fromEntries((t.subs||[]).map(v=>[v.Subtask_ID,clean(v)]))}}
+function merge3(localObj,baseObj,remoteObj){const L=clean(localObj),R=clean(remoteObj),out={...R},conflicts=[];
+ if(!baseObj){Object.assign(out,L);return {merged:out,conflicts}}
+ for(const k of new Set([...Object.keys(L),...Object.keys(R),...Object.keys(baseObj)])){const lv=L[k]??'',bv=baseObj[k]??'',rv=R[k]??'',lc=lv!==bv,rc=rv!==bv;
+  if(lc&&!rc)out[k]=lv;else if(!lc)out[k]=rv;else{out[k]=lv;if(lv!==rv&&!NOCONFLICT.has(k))conflicts.push({field:k,mine:lv,theirs:rv})}}
+ return {merged:out,conflicts}}
+const remoteChangedSince=(remoteObj,baseObj)=>!!baseObj&&Object.keys({...remoteObj,...baseObj}).some(k=>!NOCONFLICT.has(k)&&String(remoteObj[k]??'')!==String(baseObj[k]??''));
+function addConflict(c){local.conflicts=local.conflicts||[];const key=c.taskId+'|'+(c.subId||'')+'|'+c.field;local.conflicts=local.conflicts.filter(x=>x.key!==key);local.conflicts.push({...c,key,at:stamp()})}
+const sameRow=(heads,a,b)=>heads.every(h=>String(a[h]??'')===String(b[h]??''));
 async function sync(){requireWriter();if(!officialUnlocked)throw Error('Edição oficial não habilitada');if(!navigator.onLine)throw Error('Sem conexão');if(!tokenValid())throw Error('Autorize novamente sua conta Google');
- if(local.queue.length){
- const remote=await remoteRows('Tarefas'),subs=await remoteRows('Subtarefas');await ensureHeaders('Tarefas',remote,['Excluido']);
+ const remote=await remoteRows('Tarefas'),subs=await remoteRows('Subtarefas');
+ if(!remote.heads.includes('ID')||!subs.heads.includes('Subtask_ID'))throw Error('Estrutura de abas incompatível; nada foi alterado');
+ await ensureHeaders('Tarefas',remote,['Excluido']);
  // Colunas das etapas com lembrete: acrescentadas ao final da aba Subtarefas só quando usadas.
- if(local.tasks.some(t=>(t.subs||[]).some(s=>subReminder(s)!==''||s.Google_Event_ID)))await ensureHeaders('Subtarefas',subs,['Lembrete_dias','Lembrete_hora','Google_Event_ID']);
+ if(local.tasks.some(t=>(t.subs||[]).some(v=>subReminder(v)!==''||v.Google_Event_ID)))await ensureHeaders('Subtarefas',subs,['Lembrete_dias','Lembrete_hora','Google_Event_ID']);
  const taskMap=new Map(remote.rows.map(r=>[r.obj.ID,r])),subMap=new Map(subs.rows.map(r=>[r.obj.Subtask_ID,r]));
+ let newConflicts=0;
  for(const op of [...local.queue]){const t=local.tasks.find(x=>x.ID===op.id);
-  if(op.operation==='delete'){const remoteTask=taskMap.get(op.id);const related=subs.rows.filter(r=>r.obj.Task_ID===op.id);const ranges=related.map(r=>"'Subtarefas'!A"+r.row+':'+col(subs.heads.length)+r.row);if(remoteTask)ranges.push("'Tarefas'!A"+remoteTask.row+':'+col(remote.heads.length)+remoteTask.row);if(ranges.length)await request('POST','/values:batchClear',{ranges});for(const r of related){subMap.delete(r.obj.Subtask_ID);r.obj.Task_ID=''}if(remoteTask)taskMap.delete(op.id);local.tasks=local.tasks.filter(x=>x.ID!==op.id);doneOp(op);await persist();notify('Exclusão definitiva sincronizada');continue}
+  if(op.operation==='delete'){const remoteTask=taskMap.get(op.id);const related=subs.rows.filter(r=>r.obj.Task_ID===op.id);const ranges=related.map(r=>"'Subtarefas'!A"+r.row+':'+col(subs.heads.length)+r.row);if(remoteTask)ranges.push("'Tarefas'!A"+remoteTask.row+':'+col(remote.heads.length)+remoteTask.row);if(ranges.length)await request('POST','/values:batchClear',{ranges});for(const r of related){subMap.delete(r.obj.Subtask_ID);r.obj.Task_ID=''}if(remoteTask)taskMap.delete(op.id);local.tasks=local.tasks.filter(x=>x.ID!==op.id);local.conflicts=(local.conflicts||[]).filter(c=>c.taskId!==op.id);doneOp(op);await persist();notify('Exclusão definitiva sincronizada');continue}
   if(!t){doneOp(op);continue}
-  const prior=taskMap.get(t.ID);const obj={...(prior?.obj||{}),...Object.fromEntries(Object.entries(t).filter(([k])=>k!=='subs'&&!k.startsWith('_')))};
-  if(prior)await writeRow('Tarefas',prior.row,remote.heads,obj);else{const row=await appendRow('Tarefas',remote.heads,obj);taskMap.set(t.ID,{row,obj})}
-  const active=new Set();for(const s of t.subs||[]){active.add(s.Subtask_ID);const prev=subMap.get(s.Subtask_ID),so={...(prev?.obj||{}),...s};if(prev){await writeRow('Subtarefas',prev.row,subs.heads,so);prev.obj=so}else{const sr=await appendRow('Subtarefas',subs.heads,so);const entry={row:sr,obj:so};subMap.set(s.Subtask_ID,entry);subs.rows.push(entry)}}
-  for(const prev of subs.rows.filter(x=>x.obj.Task_ID===t.ID&&x.obj.Arquivada!=='Sim'&&!active.has(x.obj.Subtask_ID))){await writeRow('Subtarefas',prev.row,subs.heads,{...prev.obj,Arquivada:'Sim'});prev.obj.Arquivada='Sim'}
+  // 1) junta, sem esperar a rede, para não atropelar edições feitas durante o envio
+  const base=t._base||null,prior=taskMap.get(t.ID),title=t.Titulo||'';
+  let merged;if(prior){const m=merge3(t,base?.row,prior.obj);merged=m.merged;m.conflicts.forEach(c=>{addConflict({...c,taskId:t.ID,title});newConflicts++})}else merged=clean(t);
+  Object.assign(t,merged);
+  const baseSubs=base?.subs||null,removed=new Set(t._removedSubs||[]),handled=new Set(),newBase={row:{...merged},subs:{}},subWrites=[];
+  t.subs=t.subs||[];
+  for(const v of t.subs){const prev=subMap.get(v.Subtask_ID);let so;
+   if(prev){const m=merge3(v,baseSubs?.[v.Subtask_ID],prev.obj);so=m.merged;m.conflicts.forEach(c=>{addConflict({...c,taskId:t.ID,title,subId:v.Subtask_ID,subTitle:v.Titulo||''});newConflicts++})}else so=clean(v);
+   so.Task_ID=t.ID;Object.assign(v,so);subWrites.push({prev,so});newBase.subs[v.Subtask_ID]=so}
+  const localIds=new Set(t.subs.map(v=>v.Subtask_ID));
+  for(const r of subs.rows.filter(r=>r.obj.Task_ID===t.ID&&!localIds.has(r.obj.Subtask_ID))){const id=r.obj.Subtask_ID;
+   if(removed.has(id)){handled.add(id);if(r.obj.Arquivada==='Sim')continue;
+    if(remoteChangedSince(r.obj,baseSubs?.[id])){t.subs.push({...r.obj});newBase.subs[id]=clean(r.obj);addConflict({field:'_etapa',taskId:t.ID,title,subId:id,subTitle:r.obj.Titulo||'',mine:'removida neste aparelho',theirs:'alterada no outro aparelho'});newConflicts++}
+    else subWrites.push({prev:r,so:{...clean(r.obj),Arquivada:'Sim'}});
+   }else{t.subs.push({...r.obj});newBase.subs[id]=clean(r.obj)}// etapa criada no outro aparelho
+  }
+  // 2) grava
+  const rowObj={...(prior?.obj||{}),...merged};
+  if(prior){await writeRow('Tarefas',prior.row,remote.heads,rowObj);prior.obj=rowObj}else{const row=await appendRow('Tarefas',remote.heads,rowObj);taskMap.set(t.ID,{row,obj:rowObj})}
+  for(const w of subWrites){if(w.prev){const next={...w.prev.obj,...w.so};if(!sameRow(subs.heads,w.prev.obj,next))await writeRow('Subtarefas',w.prev.row,subs.heads,next);w.prev.obj=next}else{const sr=await appendRow('Subtarefas',subs.heads,w.so);const entry={row:sr,obj:w.so};subMap.set(w.so.Subtask_ID,entry);subs.rows.push(entry)}}
+  // 3) nova base = o que foi gravado (não o que foi editado durante o envio)
+  t._base=newBase;if(t._removedSubs)t._removedSubs=t._removedSubs.filter(id=>!handled.has(id));
   // Só remove a pendência desta versão; uma edição feita durante o envio continua na fila.
   doneOp(op);await persist();notify('Sincronização em andamento')}
+ // 4) traz da planilha o que mudou no outro aparelho (atividades sem pendência)
+ const pendingIds=new Set(local.queue.map(q=>q.id)),subsByTask=new Map();
+ for(const r of subs.rows){if(!r.obj.Task_ID)continue;if(!subsByTask.has(r.obj.Task_ID))subsByTask.set(r.obj.Task_ID,[]);subsByTask.get(r.obj.Task_ID).push(r.obj)}
+ const remoteIds=new Set();let pulled=0;
+ for(const [id,r] of taskMap){if(!id)continue;remoteIds.add(id);if(pendingIds.has(id))continue;const i=local.tasks.findIndex(x=>x.ID===id),cur=i>=0?local.tasks[i]:null;
+  const fresh={...r.obj,subs:(subsByTask.get(id)||[]).map(o=>{const ps=cur?.subs?.find(v=>v.Subtask_ID===o.Subtask_ID);return ps&&ps._evSig?{...o,_evSig:ps._evSig}:{...o}})};fresh._base=snapshotOf(fresh);
+  if(cur){if(JSON.stringify(cur._base)!==JSON.stringify(fresh._base))pulled++;local.tasks[i]=fresh}else{local.tasks.push(fresh);pulled++}}
+ const before=local.tasks.length;
+ // Excluída definitivamente no outro aparelho: sai daqui também (se não houver edição pendente)
+ local.tasks=local.tasks.filter(t=>remoteIds.has(t.ID)||pendingIds.has(t.ID)||!t._base);pulled+=before-local.tasks.length;
+ local.lastSync=stamp();await persist();const failed=await syncCalendarQueue();
+ const parts=['Sincronização concluída'];if(pulled)parts.push(pulled+' atualização(ões) recebida(s)');if(newConflicts)parts.push(newConflicts+' conflito(s) para revisar');if(failed)parts.push(failed+' evento(s) do Calendar com falha');notify(parts.join('; '))}
+
+/* Conflitos: lista e decisão. Nada é perdido: o valor do outro aparelho fica guardado até você decidir. */
+const FIELD_LABELS={Titulo:'Título',Descricao:'Descrição',Categoria:'Categoria',Projeto:'Projeto',Fazenda:'Fazenda',Urgencia:'Urgência',Prioridade:'Prioridade',Status:'Status',Data_conclusao:'Data de conclusão',Prazo:'Prazo',Data_planejada:'Data planejada',Proxima_acao:'Próxima ação',Importante:'Importante',Modelo:'Modelo',Arquivado:'Arquivado',Excluido:'Na lixeira',Safra:'Safra',Links:'Links',Recorrencia:'Recorrência',Agenda_inicio:'Início do compromisso',Agenda_fim:'Fim do compromisso',Agenda_hora_inicio:'Hora de início',Agenda_hora_fim:'Hora de fim',Agenda_local:'Local',Agenda_tipo:'Tipo de compromisso',Sincronizar_Google_Calendar:'Sincronizar com o Calendar',Lembrete_dias:'Lembrete',Lembrete_hora:'Horário do lembrete',Arquivada:'Etapa removida',Data_inicio:'Data de início'};
+async function resolveConflict(key,choice){const c=(local.conflicts||[]).find(x=>x.key===key);if(!c)return;local.conflicts=local.conflicts.filter(x=>x.key!==key);const t=local.tasks.find(x=>x.ID===c.taskId);
+ if(t&&choice==='theirs'){
+  if(c.field==='_etapa'){const v=(t.subs||[]).find(x=>x.Subtask_ID===c.subId);t.subs=(t.subs||[]).filter(x=>x.Subtask_ID!==c.subId);t._removedSubs=[...new Set([...(t._removedSubs||[]),c.subId])];if(v&&v.Google_Event_ID)enqueueCalendar('sub:'+c.subId,'delete',v.Google_Event_ID,{kind:'sub',taskId:t.ID,subId:c.subId})}
+  else{const target=c.subId?(t.subs||[]).find(x=>x.Subtask_ID===c.subId):t;if(target)target[c.field]=c.theirs}
+  t.Atualizado_em=stamp();mark(t);reconcileSubEvents(t,[]);if(yes(t.Sincronizar_Google_Calendar))enqueueCalendar(t.ID,'upsert',t.Google_Event_ID||'');
  }
- local.lastSync=stamp();await persist();const failed=await syncCalendarQueue();notify(failed?'Planilha sincronizada; '+failed+' evento(s) do Calendar com falha (tentará de novo)':'Sincronização concluída')}
+ await persist();notify(choice==='theirs'?'Valor do outro aparelho aplicado; sincronize para gravar':'Mantido o valor deste aparelho');if(typeof loadData==='function')loadData();renderConflicts()}
+function renderConflicts(){let box=byId('conflictModal');const list=local.conflicts||[];
+ if(!list.length){if(box)box.remove();return}
+ if(!box){box=document.createElement('div');box.id='conflictModal';box.className='conflict-modal';document.body.appendChild(box)}
+ box.replaceChildren();const panel=document.createElement('section');panel.className='conflict-panel';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','Conflitos de sincronização');
+ const head=document.createElement('div');head.className='conflict-head';const h=document.createElement('strong');h.textContent='Conflitos de sincronização ('+list.length+')';const x=document.createElement('button');x.className='light';x.textContent='✕';x.onclick=()=>box.remove();head.append(h,x);
+ const note=document.createElement('p');note.className='note';note.textContent='O mesmo campo foi alterado aqui e em outro aparelho. A planilha ficou com o valor deste aparelho; escolha qual manter.';panel.append(head,note);
+ for(const c of list){const item=document.createElement('div');item.className='conflict-item';const t=document.createElement('div');t.className='conflict-title';t.textContent=(c.title||'(sem título)')+(c.subId?' › etapa "'+(c.subTitle||'')+'"':'')+' — '+(c.field==='_etapa'?'etapa':FIELD_LABELS[c.field]||c.field);
+  const mine=document.createElement('div');mine.className='conflict-val';mine.textContent='Este aparelho: '+(c.mine||'(vazio)');const theirs=document.createElement('div');theirs.className='conflict-val';theirs.textContent='Outro aparelho: '+(c.theirs||'(vazio)');
+  const acts=document.createElement('div');acts.className='conflict-actions';const a=document.createElement('button');a.className='primary';a.textContent=c.field==='_etapa'?'Manter a etapa':'Manter deste aparelho';a.onclick=()=>resolveConflict(c.key,'mine');const b=document.createElement('button');b.className='light';b.textContent=c.field==='_etapa'?'Remover a etapa':'Usar do outro aparelho';b.onclick=()=>resolveConflict(c.key,'theirs');acts.append(a,b);
+  item.append(t,mine,theirs,acts);panel.append(item)}
+ box.append(panel);box.onclick=e=>{if(e.target===box)box.remove()}}
+byId('offlineConflicts').onclick=renderConflicts;
 
 // Calendar: aplicado somente depois da gravação no Sheets. O ID do evento é gravado na planilha.
 const CAL_BASE='https://www.googleapis.com/calendar/v3/calendars/primary/events';
@@ -442,11 +513,11 @@ async function loadOfficial(){
  const t=await remoteRows('Tarefas'),s=await remoteRows('Subtarefas');
  if(!t.heads.includes('ID')||!s.heads.includes('Subtask_ID'))throw Error('Estrutura de abas incompatível; nenhuma alteração foi realizada');
  const subtasks=new Map();for(const r of s.rows){const id=r.obj.Task_ID;if(!subtasks.has(id))subtasks.set(id,[]);subtasks.get(id).push(r.obj)}
- const tasks=t.rows.map(r=>({...r.obj,subs:subtasks.get(r.obj.ID)||[]}));
+ const tasks=t.rows.map(r=>{const x={...r.obj,subs:subtasks.get(r.obj.ID)||[]};x._base=snapshotOf(x);return x});
  if(!confirm('Foram encontradas '+tasks.length+' atividades na planilha oficial. Substituir a cópia LOCAL deste aplicativo pelos dados oficiais? Nenhuma alteração será enviada ao Sheets.'))return;
  if(pendingCount())throw Error('Surgiram alterações pendentes durante a leitura. Nada foi substituído.');
  const wasUnlocked=officialUnlocked;
- local={tasks,queue:[],calendarQueue:[],lastSync:stamp(),editUnlocked:wasUnlocked};officialLoaded=true;
+ local={tasks,queue:[],calendarQueue:[],lastSync:stamp(),editUnlocked:wasUnlocked,conflicts:[]};officialLoaded=true;
  await persist();notify('Dados oficiais carregados: '+tasks.length+' atividades');
  if(typeof loadData==='function')loadData();
  if(!wasUnlocked&&confirm('Confirme que realizou um backup da planilha oficial e conferiu as atividades. Habilitar a edição e sincronização NESTE DISPOSITIVO? (Fica habilitada até você limpar os dados do navegador.)'))await unlockEditing();
@@ -479,14 +550,13 @@ try{byId('offlineAutoSync').checked=localStorage.getItem(AUTO_SYNC_KEY)==='sim'}
 byId('offlineAutoSync').onchange=()=>{try{localStorage.setItem(AUTO_SYNC_KEY,byId('offlineAutoSync').checked?'sim':'nao')}catch(e){}};
 async function syncGuarded(){
  if(syncBusy||!isWriter||!officialUnlocked||!navigator.onLine||!tokenValid())return;
- if(!pendingCount())return;
  syncBusy=true;notify('Sincronizando pendências');
  try{await sync();if(typeof loadData==='function')loadData()}
  catch(e){notify('Sincronização interrompida: '+e.message+'; pendências preservadas')}
  finally{syncBusy=false}
 }
 byId('offlineAuth').onclick=()=>{if(tokenValid()){notify('Google já autorizado nesta sessão');return}authorize(null)};
-async function runSync(){if(syncBusy)return;syncBusy=true;byId('offlineSync').disabled=true;try{await sync();if(typeof loadData==='function')loadData()}catch(e){alert('Sincronização interrompida: '+e.message+'; pendências preservadas');notify('Erro de sincronização')}finally{syncBusy=false;notify(local.lastSync?'Estado da sincronização atualizado':'Aguardando sincronização')}}
+async function runSync(){if(syncBusy)return;syncBusy=true;byId('offlineSync').disabled=true;try{await sync();if(typeof loadData==='function')loadData()}catch(e){alert('Sincronização interrompida: '+e.message+'; pendências preservadas');notify('Erro de sincronização')}finally{syncBusy=false;byId('offlineSync').disabled=!isWriter||!officialUnlocked}}
 byId('offlineSync').onclick=()=>authorize(runSync);
 byId('offlineBackup').onclick=()=>{const blob=new Blob([JSON.stringify({exported:new Date().toISOString(),sheet:SHEET_ID,...local},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='kanban-v9-offline-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)};
 window.addEventListener('online',()=>{notify('Conexão recuperada');if(byId('offlineAutoSync').checked)syncGuarded()});window.addEventListener('offline',()=>notify('Offline — alterações salvas localmente'));
@@ -504,7 +574,7 @@ async function requestPersistence(){try{if(navigator.storage?.persist&&!(await n
 // Aviso único se existir o banco da versão offline antiga (app.js), que nunca foi migrado.
 async function checkLegacyDB(){try{if(!indexedDB.databases)return;const list=await indexedDB.databases();if(!list.some(d=>d.name==='kanban-offline-v1'))return;if(localStorage.getItem('kanban-legacy-alert-v1'))return;const count=await new Promise(res=>{const r=indexedDB.open('kanban-offline-v1');r.onsuccess=()=>{const db=r.result;if(!db.objectStoreNames.contains('tasks')){db.close();res(0);return}const q=db.transaction('tasks').objectStore('tasks').count();q.onsuccess=()=>{res(q.result);db.close()};q.onerror=()=>{res(0);db.close()}};r.onerror=()=>res(0)});if(count>0){localStorage.setItem('kanban-legacy-alert-v1','1');alert('Atenção: este navegador tem '+count+' atividade(s) da versão offline antiga que nunca foram enviadas à planilha. Elas não foram apagadas. Avise para recuperá-las antes de limpar os dados do navegador.')}}catch(e){}}
 restoreToken();
-const ready=setupWriterLock().then(()=>Promise.all([getLocal(),getStudiesCache()])).then(([s,study])=>{applySnapshot(s);if(study)studiesCache=study;notify(s?(officialUnlocked?'Cópia oficial local carregada; edição habilitada':'Cópia oficial local carregada; edição bloqueada até habilitar'):'Nenhuma cópia oficial local encontrada')}).catch(e=>notify('Erro ao abrir dados locais: '+e.message));
+const ready=setupWriterLock().then(()=>Promise.all([getLocal(),getStudiesCache()])).then(([s,study])=>{applySnapshot(s);if(study)studiesCache=study;setTimeout(()=>{if(tokenValid()&&navigator.onLine&&(byId('offlineAutoSync').checked||!pendingCount()))syncGuarded()},800);notify(s?(officialUnlocked?'Cópia oficial local carregada; edição habilitada':'Cópia oficial local carregada; edição bloqueada até habilitar'):'Nenhuma cópia oficial local encontrada')}).catch(e=>notify('Erro ao abrir dados locais: '+e.message));
 requestPersistence();checkLegacyDB();
 window.__v9offlineReady=ready;
 })();
